@@ -21,9 +21,6 @@ class LoginController extends Controller
             'password' => ['required', 'string', 'max:255'],
         ]);
 
-        // Only admin accounts may sign in
-        $credentials['is_admin'] = true;
-
         if (! Auth::attempt($credentials, false)) {
             throw ValidationException::withMessages([
                 'email' => 'These credentials do not match our records.',
@@ -32,7 +29,7 @@ class LoginController extends Controller
 
         $request->session()->regenerate();
 
-        return redirect()->intended(route('admin.dashboard'));
+        return redirect()->intended(route($request->user()->homeRoute()));
     }
 
     public function destroy(Request $request)
