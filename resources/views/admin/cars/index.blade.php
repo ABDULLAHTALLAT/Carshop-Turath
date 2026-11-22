@@ -28,12 +28,12 @@
 <div class="card overflow-hidden">
     <div class="overflow-x-auto">
         <table class="w-full text-start text-sm">
-            <thead class="bg-slate-50 dark:bg-slate-900/40"><tr class="th">
+            <thead class="bg-slate-50"><tr class="th">
                 <th class="px-5 py-3 text-start">{{ __('Car') }}</th><th class="px-3 py-3 text-start">{{ __('Location') }}</th><th class="px-3 py-3 text-start">{{ __('Price') }}</th><th class="px-3 py-3 text-start">{{ __('Views') }}</th><th class="px-3 py-3 text-start">{{ __('Status') }}</th><th class="px-5 py-3"></th>
             </tr></thead>
-            <tbody class="divide-y divide-slate-100 dark:divide-slate-800">
+            <tbody class="divide-y divide-slate-100">
             @forelse($cars as $car)
-                <tr class="hover:bg-slate-50/70 dark:hover:bg-slate-800/30">
+                <tr class="hover:bg-slate-50/70">
                     <td class="px-5 py-3"><div class="flex items-center gap-3">
                         @if($car->cover_url)<img class="h-12 w-16 rounded-lg object-cover" src="{{ $car->cover_url }}" alt="" loading="lazy">
                         @else<div class="car-stage w-16 shrink-0 rounded-lg p-1"><x-car-art :type="$car->body_type" :color="$car->color_hex" :shadow="false" class="w-full" /></div>@endif
