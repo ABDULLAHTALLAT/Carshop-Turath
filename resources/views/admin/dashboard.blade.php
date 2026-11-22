@@ -14,6 +14,7 @@
         ['eye', 'Total views', $k['views'], null, 'from-cyan-400 to-sky-500', null],
         ['inbox', 'Messages (30 days)', $k['inq_30'], null, 'from-indigo-400 to-blue-500', $k['inq_delta']],
     ];
+    $tints = ['border-s-sky-400 bg-gradient-to-br from-sky-50 to-white', 'border-s-emerald-400 bg-gradient-to-br from-emerald-50 to-white', 'border-s-amber-400 bg-gradient-to-br from-amber-50 to-white', 'border-s-violet-400 bg-gradient-to-br from-violet-50 to-white'];
     $attention = [
         ['inbox', $a['attention']['unread'], 'unread messages', route('admin.inquiries.index'), 'text-rose-600 bg-rose-50'],
         ['alert', $a['attention']['expired_licenses'], 'cars with an expired licence', route('admin.cars.index'), 'text-amber-600 bg-amber-50'],
@@ -49,7 +50,7 @@
 {{-- KPIs --}}
 <div class="mb-8 grid grid-cols-2 gap-4 xl:grid-cols-4">
     @foreach($kpis as $i => [$icon, $label, $num, $text, $grad, $delta])
-        <div class="kpi card reveal p-5 d-{{ ($i % 4) + 1 }}">
+        <div class="kpi card reveal border-s-4 p-5 d-{{ ($i % 4) + 1 }} {{ $tints[$i % count($tints)] }}">
             <div class="flex items-center justify-between">
                 <span class="grid h-11 w-11 place-items-center rounded-xl bg-gradient-to-br {{ $grad }} text-white shadow-lg"><x-icon :name="$icon" class="h-5 w-5" /></span>
                 @if($delta !== null)<span class="num inline-flex items-center gap-1 rounded-full px-2 py-0.5 text-[11px] font-extrabold {{ $delta >= 0 ? 'bg-emerald-50 text-emerald-700' : 'bg-rose-50 text-rose-700' }}"><x-icon :name="$delta >= 0 ? 'trending-up' : 'arrow-right'" class="h-3 w-3" /> {{ $delta > 0 ? '+' : '' }}{{ $delta }}%</span>@endif
@@ -99,7 +100,7 @@
             @foreach($a['colors'] as $name => $n)
                 <li class="flex items-center gap-3"><span class="h-5 w-5 shrink-0 rounded-full ring-1 ring-slate-300" data-bg="{{ color_hex($name) }}"></span>
                     <span class="w-20 text-[12px] font-semibold text-slate-700">{{ t($name) }}</span>
-                    <div class="h-2 flex-1 overflow-hidden rounded-full bg-slate-100 dark:bg-slate-800"><div class="h-full rounded-full bg-brand" data-w="{{ round($n / $cmax * 100) }}"></div></div>
+                    <div class="h-2 flex-1 overflow-hidden rounded-full bg-slate-100"><div class="h-full rounded-full bg-brand" data-w="{{ round($n / $cmax * 100) }}"></div></div>
                     <b class="num text-[12px] text-ink">{{ $n }}</b></li>
             @endforeach
         </ul>
