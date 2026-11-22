@@ -18,6 +18,7 @@ class SecurityHeaders
             "style-src 'self' https://fonts.googleapis.com",
             "font-src 'self' https://fonts.gstatic.com",
             "img-src 'self' data: blob:",
+            "media-src 'self'",
             "connect-src 'self'",
             "object-src 'none'",
             "base-uri 'self'",
