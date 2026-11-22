@@ -6,7 +6,6 @@
     <meta name="robots" content="noindex, nofollow">
     <meta name="csrf-token" content="{{ csrf_token() }}">
     <title>@yield('title', __('Dashboard')) | {{ __('Turath Cars') }}</title>
-    <script src="{{ asset('js/theme.js') }}"></script>
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Alexandria:wght@300;400;500;600;700&family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
@@ -61,7 +60,7 @@
 </aside>
 
 <div class="lg:ps-72">
-    <header class="sticky top-0 z-30 flex h-16 items-center justify-between gap-3 border-b border-slate-200 bg-white/85 px-4 backdrop-blur-xl sm:px-8 dark:border-slate-800">
+    <header class="sticky top-0 z-30 flex h-16 items-center justify-between gap-3 border-b border-slate-200 bg-white/85 px-4 backdrop-blur-xl sm:px-8">
         <div class="flex items-center gap-3">
             <button type="button" data-menu-toggle class="grid h-10 w-10 place-items-center rounded-full border border-slate-200 lg:hidden" aria-label="{{ __('Open menu') }}"><x-icon name="menu" class="h-5 w-5" /></button>
             <form method="GET" action="{{ route('admin.cars.index') }}" class="relative hidden sm:block" role="search">
@@ -71,7 +70,6 @@
         </div>
         <div class="flex items-center gap-2">
             <a href="{{ route('admin.inquiries.index') }}" class="relative grid h-10 w-10 place-items-center rounded-full border border-slate-200 text-slate-600 hover:text-brand-dark" aria-label="{{ __('Messages') }}"><x-icon name="bell" class="h-5 w-5" />@if($unread)<span class="num absolute -end-1 -top-1 grid h-5 min-w-[20px] place-items-center rounded-full bg-rose-500 px-1 text-[10px] font-extrabold text-white">{{ $unread }}</span>@endif</a>
-            <button type="button" data-theme-toggle class="grid h-10 w-10 place-items-center rounded-full border border-slate-200 text-slate-600 hover:text-brand-dark" aria-label="{{ __('Toggle dark mode') }}"><span class="nb-sun"><x-icon name="sun" class="h-5 w-5" /></span><span class="nb-moon"><x-icon name="moon" class="h-5 w-5" /></span></button>
             <a href="{{ route('admin.cars.create') }}" class="btn btn-brand btn-sm"><x-icon name="plus" class="h-4 w-4" :stroke="2.4" /> <span class="hidden sm:inline">{{ __('Add car') }}</span></a>
         </div>
     </header>
