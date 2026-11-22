@@ -1,6 +1,7 @@
 @extends('layouts.app')
 
-@section('title', __('About'))
+@section('title', __('About us'))
+@section('description', __('An independent broker connecting car owners and buyers across Egypt. We never own the cars we list.'))
 
 @php
     $values = [
@@ -45,7 +46,7 @@
             <g class="road-move"><path class="road-dash" d="M0 14h40v3H0zM80 14h40v3H80zM160 14h40v3h-40zM240 14h40v3h-40zM320 14h40v3h-40zM400 14h40v3h-40zM480 14h40v3h-40z"/></g>
         </svg>
     </div>
-    <svg class="absolute inset-x-0 bottom-0 h-14 w-full text-white dark:text-[#0b1220]" viewBox="0 0 1200 64" preserveAspectRatio="none" aria-hidden="true"><path fill="currentColor" d="M0 64V34c220 26 440 30 660 14S1040 4 1200 26v38Z"/></svg>
+    <svg class="absolute inset-x-0 bottom-0 h-14 w-full text-white" viewBox="0 0 1200 64" preserveAspectRatio="none" aria-hidden="true"><path fill="currentColor" d="M0 64V34c220 26 440 30 660 14S1040 4 1200 26v38Z"/></svg>
 </section>
 
 {{-- ============================== STORY + STATS ============================== --}}
@@ -111,7 +112,7 @@
         <span class="absolute inset-y-4 start-7 w-0.5 bg-gradient-to-b from-brand to-brand-light/20" aria-hidden="true"></span>
         @foreach($timeline as $i => [$icon, $title, $text])
             <li class="reveal relative flex gap-5 d-{{ $i + 1 }}">
-                <span class="relative z-10 grid h-14 w-14 shrink-0 place-items-center rounded-full brand-gradient text-ink shadow-lg shadow-brand/30 ring-4 ring-white dark:ring-[#0b1220]"><x-icon :name="$icon" class="h-6 w-6" /></span>
+                <span class="relative z-10 grid h-14 w-14 shrink-0 place-items-center rounded-full brand-gradient text-ink shadow-lg shadow-brand/30 ring-4 ring-white"><x-icon :name="$icon" class="h-6 w-6" /></span>
                 <div class="card flex-1 p-5">
                     <span class="num text-xs font-bold text-brand-dark">0{{ $i + 1 }}</span>
                     <h3 class="text-[15px] font-extrabold text-ink">{{ __($title) }}</h3>
