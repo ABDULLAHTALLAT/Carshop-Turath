@@ -48,6 +48,7 @@ CREATE TABLE `users` (
   `id` bigint unsigned NOT NULL AUTO_INCREMENT,
   `name` varchar(255) NOT NULL,
   `email` varchar(255) NOT NULL,
+  `phone` varchar(25) DEFAULT NULL,
   `password` varchar(255) NOT NULL,
   `is_admin` tinyint(1) NOT NULL DEFAULT 0,
   `remember_token` varchar(100) DEFAULT NULL,
@@ -66,6 +67,7 @@ CREATE TABLE `password_reset_tokens` (
 
 CREATE TABLE `cars` (
   `id` bigint unsigned NOT NULL AUTO_INCREMENT,
+  `user_id` bigint unsigned DEFAULT NULL,
   `slug` varchar(255) NOT NULL,
   `title` varchar(255) NOT NULL,
   `brand` varchar(255) NOT NULL,
@@ -112,6 +114,7 @@ CREATE TABLE `cars` (
   KEY `cars_brand_index` (`brand`),
   KEY `cars_year_index` (`year`),
   KEY `cars_price_index` (`price`),
+  KEY `cars_user_id_foreign` (`user_id`),
   KEY `cars_status_index` (`status`),
   KEY `cars_governorate_index` (`governorate`),
   KEY `cars_city_index` (`city`),
@@ -119,7 +122,8 @@ CREATE TABLE `cars` (
   KEY `cars_color_index` (`color`),
   KEY `cars_body_type_index` (`body_type`),
   KEY `cars_licensed_since_index` (`licensed_since`),
-  KEY `cars_created_at_index` (`created_at`)
+  KEY `cars_created_at_index` (`created_at`),
+  CONSTRAINT `cars_user_id_foreign` FOREIGN KEY (`user_id`) REFERENCES `users` (`id`) ON DELETE SET NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
 CREATE TABLE `car_images` (
@@ -154,7 +158,8 @@ INSERT INTO `migrations` (`migration`, `batch`) VALUES
 ('0001_01_01_000000_create_users_table', 1),
 ('2026_11_20_000001_create_cars_table', 1),
 ('2026_11_20_000002_create_inquiries_table', 1),
-('2026_11_21_000001_add_egypt_fields_to_cars_table', 1);
+('2026_11_21_000001_add_egypt_fields_to_cars_table', 1),
+('2026_11_22_000001_add_owner_portal', 1);
 
 SET FOREIGN_KEY_CHECKS = 1;
 
