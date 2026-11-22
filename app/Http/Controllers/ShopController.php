@@ -40,6 +40,49 @@ class ShopController extends Controller
         return response()->json(['count' => Car::visible()->filter($this->filters($request))->count()]);
     }
 
+    /** Instant suggestions for the search box: brands, models, governorates, traffic units */
+    public function suggest(Request $request): JsonResponse
+    {
+        $term = trim((string) $request->query('q', ''));
+        if (mb_strlen($term) < 2 || mb_strlen($term) > 40) {
+            return response()->json(['items' => []]);
+        }
+
+        $variants = Car::searchAliases($term);
+        $match = fn (string $text) => collect($variants)->contains(fn ($v) => mb_stripos($text, $v) !== false)
+            || mb_stripos((string) __($text), $term) !== false;
+
+        $items = [];
+
+        foreach (Car::visible()->select('brand')->distinct()->pluck('brand') as $b) {
+            if ($match($b)) {
+                $items[] = ['type' => 'brand', 'label' => __($b), 'url' => route('shop', ['brand' => $b])];
+            }
+        }
+
+        $models = Car::visible()->select('brand', 'model')->distinct()->get()
+            ->filter(fn ($c) => $match($c->model) || $match($c->brand.' '.$c->model))->take(4);
+        foreach ($models as $c) {
+            $items[] = ['type' => 'model', 'label' => __($c->brand).' '.$c->model, 'url' => route('shop', ['brand' => $c->brand, 'q' => $c->model])];
+        }
+
+        foreach (Car::governorates() as $g) {
+            if ($match($g)) {
+                $items[] = ['type' => 'place', 'label' => __($g), 'url' => route('shop', ['governorate' => $g])];
+            }
+        }
+
+        foreach (Car::trafficUnits() as $g => $units) {
+            foreach ($units as $u) {
+                if ($match($u)) {
+                    $items[] = ['type' => 'unit', 'label' => __($u), 'url' => route('shop', ['governorate' => $g, 'traffic_unit' => $u])];
+                }
+            }
+        }
+
+        return response()->json(['items' => array_slice($items, 0, 8)]);
+    }
+
     public function show(Car $car)
     {
         $car->load('images');
