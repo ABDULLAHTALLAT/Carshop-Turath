@@ -16,8 +16,8 @@
     <a href="{{ route('home') }}" class="mb-6 flex justify-center"><x-logo :dark="true" /></a>
     <form method="POST" action="{{ route('login.store') }}" class="glass hero-rise rounded-3xl p-7 shadow-2xl">
         @csrf
-        <h1 class="flex items-center gap-2 text-xl font-extrabold"><x-icon name="lock" class="h-5 w-5 text-brand" /> {{ __('Admin sign in') }}</h1>
-        <p class="mt-1 text-[13px] text-white/65">{{ __('Only the broker can open the dashboard.') }}</p>
+        <h1 class="flex items-center gap-2 text-xl font-extrabold"><x-icon name="lock" class="h-5 w-5 text-brand" /> {{ __('Sign in') }}</h1>
+        <p class="mt-1 text-[13px] text-white/65">{{ __('Owners and the broker sign in here.') }}</p>
 
         <div class="mt-6 space-y-4">
             <div><label class="mb-1.5 block text-xs font-semibold text-white/80" for="email">{{ __('Email') }}</label>
@@ -29,7 +29,8 @@
                 <input id="password" type="password" name="password" autocomplete="current-password" required dir="ltr" class="field ps-10 !bg-white !text-slate-900"></div></div>
         </div>
         <button type="submit" class="btn btn-brand mt-6 w-full"><x-icon name="log-out" class="h-5 w-5 rtl:rotate-180" /> {{ __('Sign in') }}</button>
-        <p class="mt-4 flex items-center justify-center gap-1.5 text-[11px] text-white/50"><x-icon name="shield-check" class="h-3.5 w-3.5" /> {{ __('Too many attempts are blocked for a short time.') }}</p>
+        <p class="mt-4 text-center text-[12px] text-white/60">{{ __('Want to sell your car?') }} <a class="font-bold text-brand" href="{{ route('register') }}">{{ __('Create account') }}</a></p>
+        <p class="mt-3 flex items-center justify-center gap-1.5 text-[11px] text-white/50"><x-icon name="shield-check" class="h-3.5 w-3.5" /> {{ __('Too many attempts are blocked for a short time.') }}</p>
     </form>
 </main>
 </body>
