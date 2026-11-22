@@ -1,6 +1,11 @@
 @extends('layouts.app')
 
-@section('title', __('Shop'))
+@section('title', __('Used cars for sale in Egypt'))
+@section('description', __('Browse quality used cars across Egypt. Every listing shows the licence, paperwork and how the car runs.'))
+@section('canonical', route('shop'))
+@if(request()->query())
+@section('robots', 'noindex, follow')
+@endif
 
 @php
     $units = \App\Models\Car::trafficUnits();
@@ -19,7 +24,7 @@
         <h1 class="hero-rise d-2 mt-3 text-3xl font-extrabold sm:text-4xl">{{ __('Cars for sale') }}</h1>
         <p class="hero-rise d-3 mt-2 text-sm text-white/70"><span class="num font-bold text-brand-light">{{ number_format($cars->total()) }}</span> {{ __('cars match your search') }}</p>
     </div>
-    <svg class="absolute inset-x-0 bottom-0 h-10 w-full text-white dark:text-[#0b1220]" viewBox="0 0 1200 40" preserveAspectRatio="none" aria-hidden="true"><path fill="currentColor" d="M0 40V18c240 20 520 22 760 8S1100 4 1200 14v26Z"/></svg>
+    <svg class="absolute inset-x-0 bottom-0 h-10 w-full text-white" viewBox="0 0 1200 40" preserveAspectRatio="none" aria-hidden="true"><path fill="currentColor" d="M0 40V18c240 20 520 22 760 8S1100 4 1200 14v26Z"/></svg>
 </section>
 
 <section class="mx-auto grid max-w-7xl gap-8 px-4 py-10 lg:grid-cols-[300px_1fr]">
