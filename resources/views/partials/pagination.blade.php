@@ -14,7 +14,7 @@
         @foreach($pages as $p)
             @if($p - $prev > 1)<span class="px-1 text-slate-400" aria-hidden="true">…</span>@endif
             @if($p === $cur)
-                <span aria-current="page" class="num grid h-[50px] min-w-[50px] place-items-center rounded-full bg-navy px-3 text-sm font-extrabold text-white dark:bg-brand dark:text-ink">{{ $p }}</span>
+                <span aria-current="page" class="num grid h-[50px] min-w-[50px] place-items-center rounded-full bg-navy px-3 text-sm font-extrabold text-white">{{ $p }}</span>
             @else
                 <a href="{{ $paginator->url($p) }}" class="pg-arrow num text-sm font-bold">{{ $p }}</a>
             @endif
