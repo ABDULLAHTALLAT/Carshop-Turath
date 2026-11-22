@@ -50,4 +50,38 @@ class EgyptSearchTest extends TestCase
         $this->get('/lang/ar')->assertRedirect();
         $this->get('/')->assertSee('dir="rtl"', false);
     }
+
+    public function test_arabic_and_multi_word_search_work(): void
+    {
+        $this->seed(CarSeeder::class);
+
+        $this->assertGreaterThan(0, Car::filter(['q' => 'تويوتا'])->count());
+        $this->assertSame(Car::filter(['q' => 'تويوتا'])->count(), Car::filter(['q' => 'Toyota'])->count());
+        $this->assertLessThanOrEqual(Car::filter(['q' => 'Toyota'])->count(), Car::filter(['q' => 'Toyota Cairo'])->count());
+    }
+
+    public function test_suggestions_endpoint(): void
+    {
+        $this->seed(CarSeeder::class);
+
+        $this->getJson('/shop-suggest?q=toy')->assertOk()->assertJsonStructure(['items' => [['type', 'label', 'url']]]);
+        $this->getJson('/shop-suggest?q=a')->assertOk()->assertJson(['items' => []]);
+    }
+
+    public function test_seo_endpoints_and_meta(): void
+    {
+        $this->seed(CarSeeder::class);
+
+        $this->get('/robots.txt')->assertOk()->assertSee('Sitemap:');
+        $this->get('/sitemap.xml')->assertOk()->assertSee('<urlset', false);
+        $this->get('/')->assertSee('og:image', false)->assertSee('application/ld+json', false)->assertSee('rel="canonical"', false);
+
+        $car = Car::first();
+        $this->get('/shop/'.$car->slug)->assertOk()->assertSee('"@type":"Car"', false);
+    }
+
+    public function test_dark_mode_is_gone(): void
+    {
+        $this->get('/')->assertDontSee('data-theme-toggle', false)->assertDontSee('theme.js');
+    }
 }
