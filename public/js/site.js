@@ -23,14 +23,6 @@
   });
   $$('[data-autosubmit]').forEach(function (el) { el.addEventListener('change', function () { el.form.submit(); }); });
 
-  // Theme toggle
-  $$('[data-theme-toggle]').forEach(function (b) {
-    b.addEventListener('click', function () {
-      var dark = document.documentElement.classList.toggle('dark');
-      try { localStorage.setItem('tc-theme', dark ? 'dark' : 'light'); } catch (e) {}
-    });
-  });
-
   // Sticky header + back to top
   var sticky = $('#stickyHeader'), top = $('[data-to-top]');
   function onScroll() {
@@ -194,4 +186,81 @@
 
   // Set bar widths from data attributes (CSP-safe CSSOM, no inline style attributes)
   $$('[data-w]').forEach(function (el) { el.style.width = el.getAttribute('data-w') + '%'; });
+
+  // Hero video slider: each clip enters from a different side
+  var hv = $('[data-hv]');
+  if (hv) {
+    var slides = $$('[data-hv-slide]', hv), dots = $$('[data-hv-dot]', hv), cur = 0, timer = null, DUR = 7000;
+    var reduce = window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+    hv.style.setProperty('--hv-dur', (DUR / 1000) + 's');
+    var playOnly = function (i) {
+      slides.forEach(function (sl, k) {
+        var v = sl.querySelector('video'); if (!v) return;
+        if (k === i && !reduce) { try { v.currentTime = 0; var pr = v.play(); if (pr && pr.catch) pr.catch(function () {}); } catch (e) {} }
+        else if (k !== i) { setTimeout(function () { try { v.pause(); } catch (e) {} }, 950); }
+      });
+    };
+    var go = function (n) {
+      n = (n + slides.length) % slides.length;
+      if (n === cur) return;
+      var old = slides[cur], nu = slides[n];
+      old.classList.remove('is-active', 'is-entering'); old.classList.add('is-out');
+      setTimeout(function () { old.classList.remove('is-out'); old.setAttribute('aria-hidden', 'true'); }, 950);
+      nu.classList.remove('is-out'); nu.classList.add('is-active', 'is-entering'); nu.setAttribute('aria-hidden', 'false');
+      dots.forEach(function (d, k) { d.classList.remove('is-on'); void d.offsetWidth; if (k === n) d.classList.add('is-on'); });
+      cur = n; playOnly(n); schedule();
+    };
+    var schedule = function () { clearTimeout(timer); if (!reduce) timer = setTimeout(function () { go(cur + 1); }, DUR); };
+    var isRtl = document.documentElement.dir === 'rtl';
+    $('[data-hv-prev]', hv).addEventListener('click', function () { go(cur + (isRtl ? 1 : -1)); });
+    $('[data-hv-next]', hv).addEventListener('click', function () { go(cur + (isRtl ? -1 : 1)); });
+    dots.forEach(function (d, k) { d.addEventListener('click', function () { go(k); }); });
+    document.addEventListener('visibilitychange', function () {
+      var v = slides[cur].querySelector('video');
+      if (document.hidden) { clearTimeout(timer); if (v) v.pause(); } else { if (v && !reduce) v.play().catch(function () {}); schedule(); }
+    });
+    slides[0].classList.add('is-entering'); playOnly(0); schedule();
+  }
+
+  // Search suggestions (brands, models, governorates, traffic units); text only, no innerHTML
+  $$('[data-suggest]').forEach(function (box) {
+    var input = $('input', box), list = $('[data-suggest-list]', box), url = box.getAttribute('data-url');
+    var labels = JSON.parse(document.documentElement.getAttribute('data-suggest-labels') || '{}');
+    var timer = null, idx = -1, items = [], seq = 0;
+    var close = function () { list.classList.add('hidden'); input.setAttribute('aria-expanded', 'false'); idx = -1; };
+    var mark = function () { $$('li', list).forEach(function (li, k) { li.setAttribute('aria-selected', k === idx ? 'true' : 'false'); }); };
+    var render = function () {
+      list.textContent = '';
+      if (!items.length) { close(); return; }
+      items.forEach(function (it) {
+        var li = document.createElement('li'); li.setAttribute('role', 'option');
+        var t = document.createElement('span'); t.textContent = it.label;
+        var k = document.createElement('small'); k.textContent = labels[it.type] || it.type;
+        li.appendChild(t); li.appendChild(k);
+        li.addEventListener('mousedown', function (e) { e.preventDefault(); window.location.href = it.url; });
+        list.appendChild(li);
+      });
+      list.classList.remove('hidden'); input.setAttribute('aria-expanded', 'true');
+    };
+    input.addEventListener('input', function () {
+      clearTimeout(timer);
+      var q = input.value.trim();
+      if (q.length < 2) { items = []; close(); return; }
+      timer = setTimeout(function () {
+        var my = ++seq;
+        fetch(url + '?q=' + encodeURIComponent(q), { headers: { 'Accept': 'application/json' }, credentials: 'same-origin' })
+          .then(function (r) { return r.ok ? r.json() : { items: [] }; })
+          .then(function (d) { if (my !== seq) return; items = d.items || []; idx = -1; render(); })
+          .catch(function () { close(); });
+      }, 180);
+    });
+    input.addEventListener('keydown', function (e) {
+      if (list.classList.contains('hidden')) return;
+      if (e.key === 'ArrowDown') { e.preventDefault(); idx = (idx + 1) % items.length; mark(); }
+      else if (e.key === 'ArrowUp') { e.preventDefault(); idx = (idx - 1 + items.length) % items.length; mark(); }
+      else if (e.key === 'Enter' && idx >= 0) { e.preventDefault(); window.location.href = items[idx].url; }
+      else if (e.key === 'Escape') { close(); }
+    });
+    input.addEventListener('blur', function () { setTimeout(close, 120); });
+  });
 })();
