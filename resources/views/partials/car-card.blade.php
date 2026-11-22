@@ -13,24 +13,28 @@
                 @if($car->status === 'reserved')<span class="rounded-full bg-amber-400 px-3 py-1 text-[11px] font-extrabold text-amber-950">{{ __('Reserved') }}</span>@endif
                 @if($car->is_featured)<span class="inline-flex items-center gap-1 rounded-full bg-navy/85 px-3 py-1 text-[11px] font-bold text-white backdrop-blur"><x-icon name="star" class="h-3 w-3 text-brand" /> {{ __('Featured') }}</span>@endif
             </div>
-            <span class="absolute end-3 top-3 inline-flex items-center gap-1 rounded-full bg-white/80 px-2.5 py-1 text-[11px] font-bold text-ink backdrop-blur dark:bg-slate-900/70 dark:text-white"><x-icon name="pin" class="h-3 w-3 text-brand-dark" /> {{ t($car->governorate) }}</span>
+            <span class="absolute end-3 top-3 inline-flex items-center gap-1 rounded-full bg-white/80 px-2.5 py-1 text-[11px] font-bold text-ink backdrop-blur"><x-icon name="pin" class="h-3 w-3 text-brand-dark" /> {{ t($car->governorate) }}</span>
         </div>
         <div class="p-5">
-            <div class="flex items-start justify-between gap-3">
-                <div class="min-w-0">
-                    <h3 class="truncate text-[15px] font-extrabold text-ink">{{ $car->display_title }}</h3>
-                    <p class="mt-0.5 truncate text-xs text-slate-500">{{ t($car->body_type) }} &middot; {{ t($car->color) }}</p>
+            <h3 class="truncate text-[15px] font-extrabold text-ink">{{ $car->display_title }}</h3>
+            <p class="mt-0.5 truncate text-xs text-slate-500">{{ t($car->body_type) }} &middot; {{ t($car->color) }}@if($car->traffic_unit) &middot; {{ t($car->traffic_unit) }}@endif</p>
+
+            <dl class="mt-4 divide-y divide-slate-100 border-y border-slate-100 text-[12px]">
+                @foreach([['gauge', 'Mileage', number_format($car->mileage).' '.__('km')], ['settings', 'Transmission', t($car->transmission)], ['id-card', 'Licence age', $car->license_age !== null ? $car->license_age.' '.__('years') : '-']] as [$icon, $label, $value])
+                    <div class="flex items-center justify-between py-2">
+                        <dt class="flex items-center gap-2 text-slate-500"><x-icon :name="$icon" class="h-4 w-4 text-brand-dark" /> {{ __($label) }}</dt>
+                        <dd class="num font-bold text-ink">{{ $value }}</dd>
+                    </div>
+                @endforeach
+            </dl>
+
+            <div class="mt-4 flex items-center justify-between gap-3">
+                <div>
+                    <p class="num text-lg font-extrabold text-brand-dark">{{ egp($car->price) }}</p>
+                    @if($car->negotiable)<p class="text-[10px] font-semibold text-emerald-600">{{ __('Price negotiable') }}</p>@endif
                 </div>
-                <p class="num whitespace-nowrap text-end text-base font-extrabold text-brand-dark">{{ egp($car->price) }}</p>
+                <span class="grid h-10 w-10 place-items-center rounded-full bg-brand-50 text-brand-dark transition group-hover:bg-navy group-hover:text-white"><x-icon name="arrow-right" class="h-5 w-5 flip-rtl" /></span>
             </div>
-            <ul class="mt-4 grid grid-cols-3 gap-2 border-t border-slate-100 pt-4 text-[11px] font-semibold text-slate-600">
-                <li class="flex flex-col items-center gap-1"><x-icon name="calendar" class="h-4 w-4 text-brand-dark" /> <span class="num">{{ $car->year }}</span></li>
-                <li class="flex flex-col items-center gap-1"><x-icon name="gauge" class="h-4 w-4 text-brand-dark" /> <span class="num">{{ number_format($car->mileage) }} {{ __('km') }}</span></li>
-                <li class="flex flex-col items-center gap-1"><x-icon name="settings" class="h-4 w-4 text-brand-dark" /> {{ t($car->transmission) }}</li>
-            </ul>
-            @if($car->traffic_unit)
-                <p class="mt-3 flex items-center gap-1.5 truncate text-[11px] text-slate-500"><x-icon name="id-card" class="h-3.5 w-3.5 text-brand-dark" /> {{ t($car->traffic_unit) }}</p>
-            @endif
         </div>
     </a>
 </article>
