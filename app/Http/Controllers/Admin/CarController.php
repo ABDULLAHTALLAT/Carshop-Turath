@@ -16,23 +16,25 @@ class CarController extends Controller
     public function index(Request $request)
     {
         $status = $request->query('status');
+        $search = trim((string) $request->query('q', ''));
 
         $cars = Car::with('images')
             ->when(in_array($status, Car::STATUSES, true), fn ($q) => $q->where('status', $status))
-            ->latest()->paginate(12)->withQueryString();
+            ->when($search !== '', fn ($q) => $q->filter(['q' => mb_substr($search, 0, 80)]))
+            ->latest()->paginate(15)->withQueryString();
 
-        return view('admin.cars.index', compact('cars', 'status'));
+        return view('admin.cars.index', compact('cars', 'status', 'search'));
     }
 
     public function create()
     {
-        return view('admin.cars.form', ['car' => new Car(['year' => date('Y'), 'owners_count' => 1, 'status' => 'available', 'accident_free' => true])]);
+        return view('admin.cars.form', ['car' => new Car(['year' => date('Y'), 'owners_count' => 1, 'status' => 'available', 'accident_free' => true, 'negotiable' => true, 'license_type' => 'Private', 'license_valid_years' => 3, 'origin' => 'Local', 'drive' => 'FWD', 'seats' => 5])]);
     }
 
     public function store(CarRequest $request)
     {
         $car = DB::transaction(function () use ($request) {
-            $car = new Car($request->safe()->except(['images', 'is_featured']));
+            $car = new Car($request->carData());
             $car->is_featured = $request->boolean('is_featured');
             $car->save();
 
@@ -63,7 +65,7 @@ class CarController extends Controller
         }
 
         DB::transaction(function () use ($request, $car) {
-            $car->fill($request->safe()->except(['images', 'is_featured']));
+            $car->fill($request->carData());
             $car->is_featured = $request->boolean('is_featured');
             $car->save();
 

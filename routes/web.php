@@ -10,9 +10,22 @@ use App\Http\Controllers\ShopController;
 use Illuminate\Support\Facades\Route;
 
 Route::get('/', [PageController::class, 'home'])->name('home');
+
+// Language switch (English / Arabic)
+Route::get('/lang/{locale}', function (string $locale) {
+    abort_unless(in_array($locale, config('app.locales'), true), 404);
+    session(['locale' => $locale]);
+
+    $previous = url()->previous();
+    $safe = str_starts_with($previous, url('/')) ? $previous : route('home');
+
+    return redirect($safe);
+})->name('lang');
+
 Route::get('/about', [PageController::class, 'about'])->name('about');
 
 Route::get('/shop', [ShopController::class, 'index'])->name('shop');
+Route::get('/shop-count', [ShopController::class, 'count'])->middleware('throttle:60,1')->name('shop.count');
 Route::get('/shop/{car}', [ShopController::class, 'show'])->name('shop.show');
 
 Route::get('/contact', [ContactController::class, 'create'])->name('contact');
