@@ -85,8 +85,13 @@ class ShopController extends Controller
 
     public function show(Car $car)
     {
+        $user = request()->user();
+        abort_if($car->status === 'pending' && ! ($user && ($user->is_admin || $user->id === $car->user_id)), 404);
+
         $car->load('images');
-        $car->increment('views');
+        if ($car->status !== 'pending') {
+            $car->increment('views');
+        }
 
         $related = Car::visible()->with('images')
             ->where('id', '!=', $car->id)
