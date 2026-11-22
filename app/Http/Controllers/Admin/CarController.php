@@ -18,7 +18,7 @@ class CarController extends Controller
         $status = $request->query('status');
         $search = trim((string) $request->query('q', ''));
 
-        $cars = Car::with('images')
+        $cars = Car::with(['images', 'owner:id,name'])
             ->when(in_array($status, Car::STATUSES, true), fn ($q) => $q->where('status', $status))
             ->when($search !== '', fn ($q) => $q->filter(['q' => mb_substr($search, 0, 80)]))
             ->latest()->paginate(15)->withQueryString();
