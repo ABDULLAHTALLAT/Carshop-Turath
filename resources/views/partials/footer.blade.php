@@ -1,5 +1,5 @@
 <footer class="relative mt-20 overflow-hidden bg-navy text-white">
-    <svg class="pointer-events-none absolute inset-x-0 top-0 h-3 w-full text-white dark:text-[#0b1220]" viewBox="0 0 1200 12" preserveAspectRatio="none" aria-hidden="true"><path fill="currentColor" d="M0 0h1200v4c-120 6-240 8-360 6S600 2 480 4 120 12 0 6Z"/></svg>
+    <svg class="pointer-events-none absolute inset-x-0 top-0 h-3 w-full text-white" viewBox="0 0 1200 12" preserveAspectRatio="none" aria-hidden="true"><path fill="currentColor" d="M0 0h1200v4c-120 6-240 8-360 6S600 2 480 4 120 12 0 6Z"/></svg>
     <div class="mx-auto grid max-w-7xl gap-10 px-4 py-14 md:grid-cols-2 lg:grid-cols-4">
         <div>
             <x-logo :dark="true" />
