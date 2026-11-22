@@ -29,7 +29,7 @@
     </div>
 
     {{-- Main bar --}}
-    <div class="sticky top-0 border-b border-slate-100 bg-white/90 backdrop-blur-xl dark:border-slate-800">
+    <div class="sticky top-0 border-b border-slate-100 bg-white/90 backdrop-blur-xl">
         <div class="mx-auto flex h-[72px] max-w-7xl items-center justify-between gap-4 px-4">
             <a href="{{ route('home') }}" aria-label="{{ __('Turath Cars') }}"><x-logo /></a>
 
@@ -44,9 +44,6 @@
 
             <div class="flex items-center gap-2">
                 <a href="{{ route('shop') }}" class="grid h-10 w-10 place-items-center rounded-full border border-slate-200 text-slate-600 transition hover:border-brand hover:text-brand-dark" aria-label="{{ __('Search cars') }}"><x-icon name="search" class="h-5 w-5" /></a>
-                <button type="button" data-theme-toggle class="grid h-10 w-10 place-items-center rounded-full border border-slate-200 text-slate-600 transition hover:border-brand hover:text-brand-dark" aria-label="{{ __('Toggle dark mode') }}">
-                    <span class="nb-sun"><x-icon name="sun" class="h-5 w-5" /></span><span class="nb-moon"><x-icon name="moon" class="h-5 w-5" /></span>
-                </button>
                 @auth
                     @if(auth()->user()->is_admin)
                         <a href="{{ route('admin.dashboard') }}" class="btn btn-primary btn-sm hidden sm:inline-flex"><x-icon name="dashboard" class="h-4 w-4" /> {{ __('Dashboard') }}</a>
@@ -63,7 +60,7 @@
 
 {{-- Mobile drawer --}}
 <div data-drawer-overlay class="pointer-events-none fixed inset-0 z-50 bg-navy/60 opacity-0 backdrop-blur-sm transition-opacity lg:hidden"></div>
-<aside data-drawer aria-hidden="true" class="invisible fixed inset-y-0 end-0 z-50 w-[84%] max-w-sm translate-x-full bg-white p-5 shadow-2xl transition-transform duration-300 rtl:-translate-x-full lg:hidden dark:bg-[#111a2e]">
+<aside data-drawer aria-hidden="true" class="invisible fixed inset-y-0 end-0 z-50 w-[84%] max-w-sm translate-x-full bg-white p-5 shadow-2xl transition-transform duration-300 rtl:-translate-x-full lg:hidden">
     <div class="mb-6 flex items-center justify-between"><x-logo />
         <button type="button" data-drawer-close class="grid h-10 w-10 place-items-center rounded-full border border-slate-200" aria-label="{{ __('Close menu') }}"><x-icon name="x" class="h-5 w-5" /></button>
     </div>
