@@ -9,11 +9,19 @@ class DatabaseSeeder extends Seeder
 {
     public function run(): void
     {
+        $this->seedAdmin();
+
+        // 240 Egyptian demo cars + sample messages (skipped on a non-empty database)
+        $this->call([CarSeeder::class, InquirySeeder::class]);
+    }
+
+    private function seedAdmin(): void
+    {
         $email = config('turath.admin.email');
         $password = config('turath.admin.password');
 
         if (! $email || ! $password || strlen($password) < 12) {
-            $this->command?->warn('Set ADMIN_EMAIL and an ADMIN_PASSWORD of 12+ characters in .env, then run `php artisan db:seed` again.');
+            $this->command?->warn('Set ADMIN_EMAIL and an ADMIN_PASSWORD of 12+ characters in .env to create the admin account.');
 
             return;
         }

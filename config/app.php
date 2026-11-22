@@ -17,6 +17,9 @@ return [
 
     'locale' => 'en',
 
+    // Languages the visitor can switch between (English is the default)
+    'locales' => ['en', 'ar'],
+
     'fallback_locale' => 'en',
 
     'faker_locale' => 'en_US',
