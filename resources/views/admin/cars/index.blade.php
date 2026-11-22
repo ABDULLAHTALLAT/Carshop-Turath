@@ -37,7 +37,7 @@
                     <td class="px-5 py-3"><div class="flex items-center gap-3">
                         @if($car->cover_url)<img class="h-12 w-16 rounded-lg object-cover" src="{{ $car->cover_url }}" alt="" loading="lazy">
                         @else<div class="car-stage w-16 shrink-0 rounded-lg p-1"><x-car-art :type="$car->body_type" :color="$car->color_hex" :shadow="false" class="w-full" /></div>@endif
-                        <div class="min-w-0"><b class="block truncate text-[13px] text-ink">{{ $car->display_title }}</b><span class="num text-[11px] text-slate-500">{{ $car->year }} &middot; {{ number_format($car->mileage) }} km</span></div></div></td>
+                        <div class="min-w-0"><b class="block truncate text-[13px] text-ink">{{ $car->display_title }}</b><span class="num text-[11px] text-slate-500">{{ $car->year }} &middot; {{ number_format($car->mileage) }} km@if($car->owner) &middot; <span class="font-semibold text-brand-dark">{{ $car->owner->name }}</span>@endif</span></div></div></td>
                     <td class="px-3 py-3 text-[12px] text-slate-600"><span class="block">{{ t($car->governorate) }}</span><span class="text-[11px] text-slate-400">{{ $car->traffic_unit ? t($car->traffic_unit) : '' }}</span></td>
                     <td class="num px-3 py-3 text-[13px] font-bold text-ink">{{ egp($car->price) }}</td>
                     <td class="num px-3 py-3 text-[12px] text-slate-500">{{ number_format($car->views) }}</td>
@@ -49,6 +49,9 @@
                     <td class="px-5 py-3"><div class="flex justify-end gap-1.5">
                         <a class="btn btn-ghost btn-sm" href="{{ route('shop.show', $car) }}" target="_blank" rel="noopener" aria-label="{{ __('View') }}"><x-icon name="eye" class="h-4 w-4" /></a>
                         <a class="btn btn-ghost btn-sm" href="{{ route('admin.cars.edit', $car) }}" aria-label="{{ __('Edit') }}"><x-icon name="edit" class="h-4 w-4" /></a>
+                        @if($car->status === 'pending')
+                            <form method="POST" action="{{ route('admin.cars.status', $car) }}">@csrf @method('PATCH')<input type="hidden" name="status" value="available"><button class="btn btn-brand btn-sm" type="submit"><x-icon name="check-circle" class="h-4 w-4" /> {{ __('Approve') }}</button></form>
+                        @endif
                         <form method="POST" action="{{ route('admin.cars.destroy', $car) }}" data-confirm="{{ __('Delete this car and its photos?') }}">@csrf @method('DELETE')
                             <button class="btn btn-danger btn-sm" type="submit" aria-label="{{ __('Delete') }}"><x-icon name="trash" class="h-4 w-4" /></button></form>
                     </div></td>
