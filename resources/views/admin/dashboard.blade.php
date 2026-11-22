@@ -19,6 +19,7 @@
         ['inbox', $a['attention']['unread'], 'unread messages', route('admin.inquiries.index'), 'text-rose-600 bg-rose-50'],
         ['alert', $a['attention']['expired_licenses'], 'cars with an expired licence', route('admin.cars.index'), 'text-amber-600 bg-amber-50'],
         ['clock', $a['attention']['expiring'], 'licences expiring in 30 days', route('admin.cars.index'), 'text-sky-600 bg-sky-50'],
+        ['user', $a['attention']['pending'], 'owner cars waiting for approval', route('admin.cars.index', ['status' => 'pending']), 'text-amber-600 bg-amber-50'],
         ['handshake', $a['attention']['reserved'], 'reserved cars to close', route('admin.cars.index', ['status' => 'reserved']), 'text-violet-600 bg-violet-50'],
     ];
 @endphp
@@ -37,7 +38,7 @@
 </div>
 
 {{-- Needs attention --}}
-<div class="mb-8 grid gap-3 sm:grid-cols-2 xl:grid-cols-4">
+<div class="mb-8 grid gap-3 sm:grid-cols-2 xl:grid-cols-5">
     @foreach($attention as [$icon, $n, $label, $url, $tone])
         <a href="{{ $url }}" class="card flex items-center gap-4 p-4 {{ $n ? '' : 'opacity-60' }}">
             <span class="grid h-11 w-11 shrink-0 place-items-center rounded-xl {{ $tone }}"><x-icon :name="$icon" class="h-5 w-5" /></span>
