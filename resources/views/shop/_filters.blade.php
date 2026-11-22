@@ -2,8 +2,9 @@
     <input type="hidden" name="sort" value="{{ $filters['sort'] ?? '' }}">
 
     <div><label class="label" for="f-q">{{ __('Search') }}</label>
-        <div class="relative"><x-icon name="search" class="pointer-events-none absolute start-3 top-1/2 h-4 w-4 -translate-y-1/2 text-slate-400" />
-        <input id="f-q" class="field ps-9" name="q" value="{{ $filters['q'] ?? '' }}" maxlength="80" placeholder="{{ __('Brand, model or area') }}"></div></div>
+        <div class="relative" data-suggest data-url="{{ route('shop.suggest') }}"><x-icon name="search" class="pointer-events-none absolute start-3 top-1/2 h-4 w-4 -translate-y-1/2 text-slate-400" />
+        <input id="f-q" class="field ps-9" name="q" value="{{ $filters['q'] ?? '' }}" maxlength="80" autocomplete="off" role="combobox" aria-expanded="false" aria-autocomplete="list" placeholder="{{ __('Brand, model or area') }}">
+        <ul data-suggest-list class="suggest-list hidden" role="listbox"></ul></div></div>
 
     <div class="grid grid-cols-2 gap-3">
         <div><label class="label" for="f-body">{{ __('Type') }}</label>
