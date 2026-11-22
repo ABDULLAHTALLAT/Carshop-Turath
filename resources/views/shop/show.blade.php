@@ -1,7 +1,38 @@
 @extends('layouts.app')
 
 @section('title', $car->display_title)
-@section('description', \Illuminate\Support\Str::limit(strip_tags($car->description ?: $car->title.' - '.$car->governorate), 150))
+@section('description', $car->display_title.' - '.number_format($car->price).' '.__('EGP').' - '.t($car->governorate).($car->traffic_unit ? ', '.t($car->traffic_unit) : '').' - '.number_format($car->mileage).' '.__('km').' - '.t($car->transmission).', '.t($car->fuel).'. '.\Illuminate\Support\Str::limit(strip_tags((string) $car->description), 70))
+@section('og_type', 'product')
+@if($car->cover_url)
+@section('og_image', str_starts_with($car->cover_url, 'http') ? $car->cover_url : url($car->cover_url))
+@endif
+
+@push('jsonld')
+<script type="application/ld+json">{!! json_encode(array_filter([
+    '@context' => 'https://schema.org',
+    '@type' => 'Car',
+    'name' => $car->title,
+    'brand' => ['@type' => 'Brand', 'name' => $car->brand],
+    'model' => $car->model,
+    'vehicleModelDate' => (string) $car->year,
+    'mileageFromOdometer' => ['@type' => 'QuantitativeValue', 'value' => $car->mileage, 'unitCode' => 'KMT'],
+    'fuelType' => $car->fuel,
+    'vehicleTransmission' => $car->transmission,
+    'bodyType' => $car->body_type,
+    'color' => $car->color,
+    'itemCondition' => 'https://schema.org/UsedCondition',
+    'image' => $car->cover_url ? [str_starts_with($car->cover_url, 'http') ? $car->cover_url : url($car->cover_url)] : null,
+    'url' => url()->current(),
+    'offers' => [
+        '@type' => 'Offer',
+        'price' => $car->price,
+        'priceCurrency' => 'EGP',
+        'availability' => $car->status === 'sold' ? 'https://schema.org/SoldOut' : 'https://schema.org/InStock',
+        'areaServed' => $car->governorate,
+        'seller' => ['@type' => 'Organization', 'name' => config('turath.broker.name')],
+    ],
+]), JSON_UNESCAPED_UNICODE | JSON_UNESCAPED_SLASHES | JSON_HEX_TAG) !!}</script>
+@endpush
 
 @php
     $hasPhotos = $car->images->isNotEmpty();
@@ -97,7 +128,7 @@
                 </div>
                 <div class="grid gap-5 sm:grid-cols-[auto_1fr]">
                     {{-- Egyptian plate look-alike with hidden digits --}}
-                    <div class="mx-auto w-full max-w-[210px] rounded-xl border-2 border-slate-800 bg-white p-1 text-ink shadow-md dark:border-slate-300" dir="rtl">
+                    <div class="mx-auto w-full max-w-[210px] rounded-xl border-2 border-slate-800 bg-white p-1 text-ink shadow-md" dir="rtl">
                         <div class="flex items-center justify-between rounded-md bg-sky-600 px-2 py-0.5 text-[9px] font-bold text-white"><span>مصر</span><span dir="ltr">EGYPT</span></div>
                         <div class="py-2 text-center text-xl font-extrabold tracking-wide text-slate-900"><span>{{ $car->plate_letters }}</span> <span class="text-slate-400">•••</span></div>
                         <p class="pb-1 text-center text-[9px] font-semibold text-slate-500">{{ __('Plate digits shared on request') }}</p>
