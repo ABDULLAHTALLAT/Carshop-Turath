@@ -1,0 +1,11 @@
+{
+  "name": "turath-cars",
+  "private": true,
+  "scripts": {
+    "build": "tailwindcss -c tailwind.config.js -i resources/css/app.css -o public/css/app.css --minify",
+    "dev": "tailwindcss -c tailwind.config.js -i resources/css/app.css -o public/css/app.css --watch"
+  },
+  "devDependencies": {
+    "tailwindcss": "^3.4.19"
+  }
+}
