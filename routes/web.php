@@ -22,10 +22,16 @@ Route::get('/lang/{locale}', function (string $locale) {
     return redirect($safe);
 })->name('lang');
 
+Route::get('/robots.txt', fn () => response(
+    "User-agent: *\nDisallow: /admin\nDisallow: /login\nDisallow: /shop-count\nDisallow: /lang/\n\nSitemap: ".url('/sitemap.xml')."\n",
+    200, ['Content-Type' => 'text/plain; charset=UTF-8']
+))->name('robots');
+Route::get('/sitemap.xml', \App\Http\Controllers\SitemapController::class)->name('sitemap');
 Route::get('/about', [PageController::class, 'about'])->name('about');
 
 Route::get('/shop', [ShopController::class, 'index'])->name('shop');
 Route::get('/shop-count', [ShopController::class, 'count'])->middleware('throttle:60,1')->name('shop.count');
+Route::get('/shop-suggest', [ShopController::class, 'suggest'])->middleware('throttle:90,1')->name('shop.suggest');
 Route::get('/shop/{car}', [ShopController::class, 'show'])->name('shop.show');
 
 Route::get('/contact', [ContactController::class, 'create'])->name('contact');
