@@ -6,7 +6,7 @@
     $ages = [1, 2, 3, 5, 8, 10];
     $current = $f['body_type'] ?? '';
 @endphp
-<form method="GET" action="{{ route('shop') }}" data-search data-count-url="{{ route('shop.count') }}" class="sb mx-auto max-w-6xl overflow-hidden rounded-3xl shadow-2xl shadow-navy/20 ring-1 ring-slate-200/70 dark:ring-slate-700">
+<form method="GET" action="{{ route('shop') }}" data-search data-count-url="{{ route('shop.count') }}" class="sb mx-auto max-w-6xl overflow-hidden rounded-3xl shadow-2xl shadow-navy/20 ring-1 ring-slate-200/70">
     <input type="hidden" name="body_type" value="{{ $current }}">
 
     <div class="sb-tabs px-3 sm:px-5" role="tablist" aria-label="{{ __('Car type') }}">
@@ -18,10 +18,13 @@
     </div>
 
     <div class="grid gap-3 p-4 sm:p-5 md:grid-cols-2 lg:grid-cols-12">
-        <label class="sb-box lg:col-span-4">
-            <x-icon name="search" class="h-5 w-5 shrink-0 text-brand-dark" />
-            <input type="search" name="q" value="{{ $f['q'] ?? '' }}" maxlength="80" placeholder="{{ __('Brand, model or area') }}" aria-label="{{ __('Search') }}">
-        </label>
+        <div class="relative lg:col-span-4" data-suggest data-url="{{ route('shop.suggest') }}">
+            <label class="sb-box">
+                <x-icon name="search" class="h-5 w-5 shrink-0 text-brand-dark" />
+                <input type="search" name="q" value="{{ $f['q'] ?? '' }}" maxlength="80" autocomplete="off" role="combobox" aria-expanded="false" aria-autocomplete="list" placeholder="{{ __('Brand, model or area') }}" aria-label="{{ __('Search') }}">
+            </label>
+            <ul data-suggest-list class="suggest-list hidden" role="listbox"></ul>
+        </div>
 
         <label class="sb-box sb-sel lg:col-span-4">
             <x-icon name="pin" class="h-5 w-5 shrink-0 text-brand-dark" />
