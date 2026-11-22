@@ -187,39 +187,23 @@
   // Set bar widths from data attributes (CSP-safe CSSOM, no inline style attributes)
   $$('[data-w]').forEach(function (el) { el.style.width = el.getAttribute('data-w') + '%'; });
 
-  // Hero video slider: each clip enters from a different side
+  // Hero background: the clips play one after another (loop of all clips)
   var hv = $('[data-hv]');
   if (hv) {
-    var slides = $$('[data-hv-slide]', hv), dots = $$('[data-hv-dot]', hv), cur = 0, timer = null, DUR = 7000;
+    var vids = $$('[data-hv-video]', hv), cur = 0;
     var reduce = window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches;
-    hv.style.setProperty('--hv-dur', (DUR / 1000) + 's');
-    var playOnly = function (i) {
-      slides.forEach(function (sl, k) {
-        var v = sl.querySelector('video'); if (!v) return;
-        if (k === i && !reduce) { try { v.currentTime = 0; var pr = v.play(); if (pr && pr.catch) pr.catch(function () {}); } catch (e) {} }
-        else if (k !== i) { setTimeout(function () { try { v.pause(); } catch (e) {} }, 950); }
-      });
+    var play = function (v) { try { v.currentTime = 0; var pr = v.play(); if (pr && pr.catch) pr.catch(function () {}); } catch (e) {} };
+    var next = function () {
+      var old = vids[cur]; cur = (cur + 1) % vids.length; var nu = vids[cur];
+      play(nu); nu.classList.add('is-active');
+      setTimeout(function () { old.classList.remove('is-active'); try { old.pause(); } catch (e) {} }, 520);
     };
-    var go = function (n) {
-      n = (n + slides.length) % slides.length;
-      if (n === cur) return;
-      var old = slides[cur], nu = slides[n];
-      old.classList.remove('is-active', 'is-entering'); old.classList.add('is-out');
-      setTimeout(function () { old.classList.remove('is-out'); old.setAttribute('aria-hidden', 'true'); }, 950);
-      nu.classList.remove('is-out'); nu.classList.add('is-active', 'is-entering'); nu.setAttribute('aria-hidden', 'false');
-      dots.forEach(function (d, k) { d.classList.remove('is-on'); void d.offsetWidth; if (k === n) d.classList.add('is-on'); });
-      cur = n; playOnly(n); schedule();
-    };
-    var schedule = function () { clearTimeout(timer); if (!reduce) timer = setTimeout(function () { go(cur + 1); }, DUR); };
-    var isRtl = document.documentElement.dir === 'rtl';
-    $('[data-hv-prev]', hv).addEventListener('click', function () { go(cur + (isRtl ? 1 : -1)); });
-    $('[data-hv-next]', hv).addEventListener('click', function () { go(cur + (isRtl ? -1 : 1)); });
-    dots.forEach(function (d, k) { d.addEventListener('click', function () { go(k); }); });
+    vids.forEach(function (v) { v.addEventListener('ended', function () { if (vids[cur] === v) next(); }); });
+    if (!reduce) play(vids[0]);
     document.addEventListener('visibilitychange', function () {
-      var v = slides[cur].querySelector('video');
-      if (document.hidden) { clearTimeout(timer); if (v) v.pause(); } else { if (v && !reduce) v.play().catch(function () {}); schedule(); }
+      var v = vids[cur]; if (!v || reduce) return;
+      if (document.hidden) v.pause(); else v.play().catch(function () {});
     });
-    slides[0].classList.add('is-entering'); playOnly(0); schedule();
   }
 
   // Search suggestions (brands, models, governorates, traffic units); text only, no innerHTML
