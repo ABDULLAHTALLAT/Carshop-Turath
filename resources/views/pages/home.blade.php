@@ -1,6 +1,7 @@
 @extends('layouts.app')
 
-@section('title', __('Home'))
+@section('full_title', __('Used cars for sale in Egypt').' | '.__('Turath Cars'))
+@section('description', __('Search used cars in Egypt by type, price, governorate, traffic unit, colour and licence age. Real papers, honest broker.'))
 
 @php
     $brandList = \App\Models\Car::visible()->select('brand')->distinct()->orderBy('brand')->pluck('brand');
@@ -42,20 +43,38 @@
             </ul>
         </div>
 
-        {{-- Animated showroom: transparent cars driving in over a moving road --}}
-        <div class="relative mx-auto w-full max-w-[34rem]" aria-hidden="true">
-            <div class="absolute inset-x-6 bottom-6 h-24 rounded-full bg-brand/25 blur-2xl"></div>
-            <div class="float-slow d-3 absolute -top-2 start-4 w-[48%] opacity-70"><div class="drive-in d-5"><x-car-art type="Sedan" color="#6bbce9" :shadow="false" /></div></div>
-            <div class="float relative mt-10"><div class="drive-in d-2"><x-car-art type="SUV" color="#f3f3ef" :spin="true" class="drop-shadow-2xl" /></div></div>
-            <svg viewBox="0 0 400 22" class="-mt-3 w-full overflow-hidden" preserveAspectRatio="none">
-                <rect y="8" width="400" height="2" fill="#fff" opacity=".18"/>
-                <g class="road-move"><path class="road-dash" d="M0 16h40v3H0zM80 16h40v3H80zM160 16h40v3h-40zM240 16h40v3h-40zM320 16h40v3h-40zM400 16h40v3h-40zM480 16h40v3h-40z"/></g>
-            </svg>
-            <div class="glass float d-4 absolute -end-2 top-6 flex items-center gap-3 rounded-2xl px-4 py-3">
+        {{-- Real driving clips: each slide enters from a different side --}}
+        @php
+            $clips = [
+                ['drive-1', 'left', 'Toyota Camry'],
+                ['drive-2', 'top', 'BMW X7'],
+                ['drive-3', 'right', 'BMW M4'],
+            ];
+        @endphp
+        <div class="relative mx-auto w-full max-w-[26rem]" data-hv role="region" aria-roledescription="carousel" aria-label="{{ __('Car videos') }}">
+            <div class="hv-frame relative aspect-[9/13] overflow-hidden rounded-[2rem] bg-navy shadow-2xl shadow-black/40 ring-1 ring-white/20">
+                @foreach($clips as $i => [$file, $fx, $label])
+                    <div class="hv-slide in-{{ $fx }} {{ $i === 0 ? 'is-active' : '' }}" data-hv-slide aria-hidden="{{ $i === 0 ? 'false' : 'true' }}">
+                        <video class="h-full w-full object-cover" muted playsinline loop preload="{{ $i === 0 ? 'auto' : 'metadata' }}" poster="{{ asset('media/'.$file.'.jpg') }}" aria-label="{{ $label }}">
+                            <source src="{{ asset('media/'.$file.'.mp4') }}" type="video/mp4">
+                        </video>
+                        <span class="hv-caption glass absolute start-4 top-4 inline-flex items-center gap-2 rounded-full px-3 py-1.5 text-[11px] font-bold text-white"><x-icon name="car" class="h-3.5 w-3.5" /> {{ $label }}</span>
+                    </div>
+                @endforeach
+                <div class="pointer-events-none absolute inset-x-0 bottom-0 z-10 h-28 bg-gradient-to-t from-navy/80 to-transparent"></div>
+                <div class="absolute inset-x-4 bottom-4 z-10 flex items-center justify-between">
+                    <button type="button" data-hv-prev class="pg-arrow hv-btn" aria-label="{{ __('Previous video') }}"><x-icon name="arrow-left" class="h-5 w-5 flip-rtl" /></button>
+                    <div class="flex items-center gap-2" role="tablist">
+                        @foreach($clips as $i => $c)<button type="button" data-hv-dot role="tab" class="hv-dot {{ $i === 0 ? 'is-on' : '' }}" aria-label="{{ __('Video') }} {{ $i + 1 }}"><i></i></button>@endforeach
+                    </div>
+                    <button type="button" data-hv-next class="pg-arrow hv-btn" aria-label="{{ __('Next video') }}"><x-icon name="arrow-right" class="h-5 w-5 flip-rtl" /></button>
+                </div>
+            </div>
+            <div class="glass float absolute -end-3 top-10 hidden items-center gap-3 rounded-2xl px-4 py-3 sm:flex">
                 <span class="grid h-9 w-9 place-items-center rounded-xl bg-brand text-ink"><x-icon name="trending-up" class="h-5 w-5" /></span>
                 <span class="text-[11px] leading-tight text-white/70">{{ __('Cars listed') }}<b class="num block text-lg text-white">{{ number_format($stats['cars']) }}+</b></span>
             </div>
-            <div class="glass float d-7 absolute -start-3 bottom-14 flex items-center gap-3 rounded-2xl px-4 py-3">
+            <div class="glass float d-4 absolute -start-3 bottom-24 hidden items-center gap-3 rounded-2xl px-4 py-3 sm:flex">
                 <span class="grid h-9 w-9 place-items-center rounded-xl bg-emerald-400 text-emerald-950"><x-icon name="id-card" class="h-5 w-5" /></span>
                 <span class="text-[11px] leading-tight text-white/70">{{ __('Licence') }}<b class="block text-sm text-white">{{ __('Verified') }}</b></span>
             </div>
@@ -63,7 +82,7 @@
     </div>
 
     <a href="#search" class="scroll-cue absolute bottom-24 start-1/2 hidden -translate-x-1/2 text-white/60 lg:block" aria-label="{{ __('Scroll down') }}"><i class="block"><x-icon name="chevron-down" class="h-6 w-6" /></i></a>
-    <svg class="absolute inset-x-0 bottom-0 h-16 w-full text-white dark:text-[#0b1220]" viewBox="0 0 1200 64" preserveAspectRatio="none" aria-hidden="true"><path fill="currentColor" d="M0 64V30c200 30 420 36 640 20S1050 0 1200 22v42Z"/></svg>
+    <svg class="absolute inset-x-0 bottom-0 h-16 w-full text-white" viewBox="0 0 1200 64" preserveAspectRatio="none" aria-hidden="true"><path fill="currentColor" d="M0 64V30c200 30 420 36 640 20S1050 0 1200 22v42Z"/></svg>
 </section>
 
 {{-- ============================== SEARCH ============================== --}}
@@ -185,7 +204,7 @@
         <div class="pointer-events-none absolute inset-x-[12%] top-7 hidden h-0.5 bg-gradient-to-r from-brand to-brand-light md:block grow-x d-4"></div>
         @foreach($steps as $i => [$icon, $title, $text])
             <div class="reveal text-center d-{{ $i + 1 }}">
-                <span class="relative mx-auto grid h-14 w-14 place-items-center rounded-full brand-gradient text-ink shadow-lg shadow-brand/30 ring-4 ring-white dark:ring-[#0b1220]"><x-icon :name="$icon" class="h-6 w-6" /></span>
+                <span class="relative mx-auto grid h-14 w-14 place-items-center rounded-full brand-gradient text-ink shadow-lg shadow-brand/30 ring-4 ring-white"><x-icon :name="$icon" class="h-6 w-6" /></span>
                 <h3 class="mt-4 text-[15px] font-extrabold text-ink">{{ __($title) }}</h3>
                 <p class="mx-auto mt-1.5 max-w-[16rem] text-[13px] leading-6 text-slate-500">{{ __($text) }}</p>
             </div>
