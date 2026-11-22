@@ -43,7 +43,7 @@
             <p class="hero-rise d-6 mt-5 max-w-xl text-[15px] leading-8 text-white/80">{{ __('Search by type, price, place, traffic unit, colour and licence age. Every listing shows the real papers and how the car runs.') }}</p>
             <div class="hero-rise d-8 mt-8 flex flex-wrap items-center gap-3">
                 <a href="{{ route('shop') }}" class="btn btn-brand"><x-icon name="car" class="h-5 w-5" /> {{ __('Browse cars') }} <x-icon name="arrow-right" class="h-4 w-4 flip-rtl" /></a>
-                <a href="{{ route('contact') }}" class="btn glass text-white hover:bg-white/15"><x-icon name="plus" class="h-5 w-5" /> {{ __('Sell your car') }}</a>
+                <a href="{{ route('register') }}" class="btn glass text-white hover:bg-white/15"><x-icon name="plus" class="h-5 w-5" /> {{ __('Sell your car') }}</a>
             </div>
             <ul class="hero-rise d-10 mt-9 grid max-w-xl grid-cols-3 gap-4 text-[12px] font-semibold text-white/85">
                 <li class="flex items-center gap-2"><x-icon name="shield-check" class="h-5 w-5 text-brand" /> {{ __('Licence checked') }}</li>
