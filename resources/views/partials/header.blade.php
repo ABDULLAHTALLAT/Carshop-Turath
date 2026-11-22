@@ -45,13 +45,11 @@
             <div class="flex items-center gap-2">
                 <a href="{{ route('shop') }}" class="grid h-10 w-10 place-items-center rounded-full border border-slate-200 text-slate-600 transition hover:border-brand hover:text-brand-dark" aria-label="{{ __('Search cars') }}"><x-icon name="search" class="h-5 w-5" /></a>
                 @auth
-                    @if(auth()->user()->is_admin)
-                        <a href="{{ route('admin.dashboard') }}" class="btn btn-primary btn-sm hidden sm:inline-flex"><x-icon name="dashboard" class="h-4 w-4" /> {{ __('Dashboard') }}</a>
-                    @endif
+                    <a href="{{ route(auth()->user()->homeRoute()) }}" class="btn btn-primary btn-sm hidden sm:inline-flex"><x-icon name="dashboard" class="h-4 w-4" /> {{ __('Dashboard') }}</a>
                 @else
                     <a href="{{ route('login') }}" class="grid h-10 w-10 place-items-center rounded-full border border-slate-200 text-slate-600 transition hover:border-brand hover:text-brand-dark" aria-label="{{ __('Admin login') }}"><x-icon name="lock" class="h-5 w-5" /></a>
                 @endauth
-                <a href="{{ route('contact') }}" class="btn btn-brand btn-sm hidden md:inline-flex"><x-icon name="plus" class="h-4 w-4" :stroke="2.4" /> {{ __('Sell your car') }}</a>
+                <a href="{{ auth()->check() && ! auth()->user()->is_admin ? route('owner.cars.create') : route('register') }}" class="btn btn-brand btn-sm hidden md:inline-flex"><x-icon name="plus" class="h-4 w-4" :stroke="2.4" /> {{ __('Sell your car') }}</a>
                 <button type="button" data-menu-toggle class="grid h-10 w-10 place-items-center rounded-full border border-slate-200 text-slate-700 lg:hidden" aria-label="{{ __('Open menu') }}"><x-icon name="menu" class="h-5 w-5" /></button>
             </div>
         </div>
@@ -70,7 +68,7 @@
                 <x-icon :name="$icon" class="h-5 w-5 text-brand-dark" /> {{ __($label) }}
             </a>
         @endforeach
-        <a href="{{ route('contact') }}" class="btn btn-brand mt-4"><x-icon name="plus" class="h-4 w-4" /> {{ __('Sell your car') }}</a>
+        <a href="{{ route('register') }}" class="btn btn-brand mt-4"><x-icon name="plus" class="h-4 w-4" /> {{ __('Sell your car') }}</a>
         @auth
             @if(auth()->user()->is_admin)<a href="{{ route('admin.dashboard') }}" class="btn btn-ghost mt-2"><x-icon name="dashboard" class="h-4 w-4" /> {{ __('Dashboard') }}</a>@endif
         @endauth
