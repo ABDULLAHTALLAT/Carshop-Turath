@@ -185,30 +185,9 @@ html[lang=ar] .th { letter-spacing: 0; text-transform: none; }
 .tl-line { stroke: #6bbce9; stroke-width: 3; stroke-linecap: round; stroke-dasharray: 6 10; }
 .prewrap { white-space: pre-wrap; overflow-wrap: anywhere; }
 
-/* ---- Hero video slider ---- */
-.hv-slide { position: absolute; inset: 0; opacity: 0; visibility: hidden; }
-.hv-slide.is-active { opacity: 1; visibility: visible; z-index: 2; }
-.hv-slide.is-out { opacity: 1; visibility: visible; z-index: 1; animation: hv-out .9s ease forwards; }
-.hv-btn { background: rgba(255,255,255,.16); color: #fff; border-color: rgba(255,255,255,.3); backdrop-filter: blur(8px); }
-.hv-btn:hover { background: #6bbce9; color: #0b2447; }
-.hv-dot { position: relative; height: 6px; width: 22px; border-radius: 9999px; background: rgba(255,255,255,.35); overflow: hidden; }
-.hv-dot i { position: absolute; inset: 0; background: #fff; transform: scaleX(0); transform-origin: left; }
-[dir=rtl] .hv-dot i { transform-origin: right; }
-.hv-dot.is-on { width: 38px; }
-.hv-dot.is-on i { animation: hv-fill var(--hv-dur, 7s) linear forwards; }
-@keyframes hv-fill { to { transform: scaleX(1); } }
-@keyframes hv-out { to { transform: scale(.92); opacity: 0; filter: brightness(.5); } }
-@keyframes hv-in-left { from { transform: translateX(-105%); } to { transform: none; } }
-@keyframes hv-in-right { from { transform: translateX(105%); } to { transform: none; } }
-@keyframes hv-in-top { from { transform: translateY(-105%); } to { transform: none; } }
-@keyframes hv-in-bottom { from { transform: translateY(105%); } to { transform: none; } }
-@media (prefers-reduced-motion: no-preference) {
-  .hv-slide.is-active.is-entering.in-left { animation: hv-in-left .95s cubic-bezier(.7,0,.2,1) both; }
-  .hv-slide.is-active.is-entering.in-right { animation: hv-in-right .95s cubic-bezier(.7,0,.2,1) both; }
-  .hv-slide.is-active.is-entering.in-top { animation: hv-in-top .95s cubic-bezier(.7,0,.2,1) both; }
-  .hv-slide.is-active.is-entering.in-bottom { animation: hv-in-bottom .95s cubic-bezier(.7,0,.2,1) both; }
-}
-.hv-btn { width: 42px; height: 42px; }
+/* ---- Hero background videos (played one after another, no movement) ---- */
+.hv-video { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; opacity: 0; transition: opacity .5s ease; }
+.hv-video.is-active { opacity: 1; }
 
 /* ---- Search suggestions ---- */
 .suggest-list { position: absolute; z-index: 40; inset-inline: 0; top: calc(100% + 6px); background: #fff; border: 1px solid #e2e8f0; border-radius: 1rem; box-shadow: 0 24px 50px -20px rgba(11,36,71,.35); padding: .35rem; max-height: 320px; overflow: auto; }
