@@ -102,6 +102,31 @@ class Car extends Model
         return $this->hasMany(Inquiry::class);
     }
 
+    /** The word itself plus any English catalogue values whose Arabic name contains it */
+    public static function searchAliases(string $token): array
+    {
+        static $reverse = null;
+        $token = mb_substr($token, 0, 40);
+        $out = [$token];
+
+        if (preg_match('/\p{Arabic}/u', $token)) {
+            if ($reverse === null) {
+                $path = lang_path('ar.json');
+                $reverse = is_file($path) ? (json_decode(file_get_contents($path), true) ?: []) : [];
+            }
+            foreach ($reverse as $en => $ar) {
+                if (is_string($ar) && strlen($en) <= 32 && ! preg_match('/[.,?:!]/', $en) && mb_stripos($ar, $token) !== false) {
+                    $out[] = $en;
+                    if (count($out) > 6) {
+                        break;
+                    }
+                }
+            }
+        }
+
+        return array_values(array_unique($out));
+    }
+
     public function scopeVisible(Builder $query): Builder
     {
         return $query->where('status', '!=', 'sold');
@@ -113,13 +138,23 @@ class Car extends Model
 
         return $query
             ->when($f['q'] ?? null, function ($q, $term) {
-                $term = addcslashes($term, '%_\\');
-                $q->where(function ($w) use ($term) {
-                    $w->where('title', 'like', "%{$term}%")
-                        ->orWhere('brand', 'like', "%{$term}%")
-                        ->orWhere('model', 'like', "%{$term}%")
-                        ->orWhere('city', 'like', "%{$term}%");
-                });
+                // Every word must match somewhere (AND); a word may match any text field (OR).
+                // Arabic words are mapped to their English catalogue value first.
+                $tokens = array_slice(preg_split('/\s+/u', trim($term), -1, PREG_SPLIT_NO_EMPTY), 0, 6);
+                foreach ($tokens as $token) {
+                    $variants = static::searchAliases($token);
+                    $q->where(function ($w) use ($variants) {
+                        foreach ($variants as $v) {
+                            $like = '%'.addcslashes($v, '%_\\').'%';
+                            foreach (['title', 'brand', 'model', 'city', 'governorate', 'traffic_unit', 'color', 'body_type', 'fuel'] as $col) {
+                                $w->orWhere($col, 'like', $like);
+                            }
+                            if (ctype_digit($v) && strlen($v) === 4) {
+                                $w->orWhere('year', (int) $v);
+                            }
+                        }
+                    });
+                }
             })
             ->when($f['brand'] ?? null, fn ($q, $v) => $q->where('brand', $v))
             ->when($f['body_type'] ?? null, fn ($q, $v) => $q->where('body_type', $v))
