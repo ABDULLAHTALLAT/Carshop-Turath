@@ -1,69 +1,37 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="{{ app()->getLocale() }}" dir="{{ is_rtl() ? 'rtl' : 'ltr' }}">
 <head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
-    <title>@yield('title', 'Turath Cars') | Used Cars in Egypt</title>
-    <meta name="description" content="@yield('description', 'Browse quality used cars across Egypt. Every listing includes full details, paperwork and how the car runs.')">
+    <title>@yield('title', __('Turath Cars')) | {{ __('Used cars in Egypt') }}</title>
+    <meta name="description" content="@yield('description', __('Browse quality used cars across Egypt. Every listing shows the licence, paperwork and how the car runs.'))">
+    <meta name="theme-color" content="#0b2447">
     <meta name="csrf-token" content="{{ csrf_token() }}">
+    <script src="{{ asset('js/theme.js') }}"></script>
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Alexandria:wght@300;400;500;600;700&family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="{{ asset('css/app.css') }}">
 </head>
-<body>
-    <a class="skip-link" href="#main">Skip to content</a>
+<body class="min-h-screen bg-white text-slate-800 antialiased">
+<a href="#main" class="skip-link">{{ __('Skip to content') }}</a>
 
-    <header class="site-header">
-        <div class="container nav">
-            <a class="brand" href="{{ route('home') }}">Turath<span>Cars</span></a>
-            <button class="nav-toggle" type="button" data-nav-toggle aria-label="Toggle menu" aria-expanded="false">&#9776;</button>
-            <ul class="nav-links" data-nav-links>
-                <li><a href="{{ route('home') }}" @if(request()->routeIs('home')) aria-current="page" @endif>Home</a></li>
-                <li><a href="{{ route('shop') }}" @if(request()->routeIs('shop*')) aria-current="page" @endif>Shop</a></li>
-                <li><a href="{{ route('about') }}" @if(request()->routeIs('about')) aria-current="page" @endif>About</a></li>
-                <li><a href="{{ route('contact') }}" @if(request()->routeIs('contact')) aria-current="page" @endif>Contact</a></li>
-                @auth
-                    @if(auth()->user()->is_admin)
-                        <li><a href="{{ route('admin.dashboard') }}">Dashboard</a></li>
-                    @endif
-                @endauth
-            </ul>
-        </div>
-    </header>
+@include('partials.header')
 
-    <main id="main">
-        @yield('content')
-    </main>
-
-    <footer class="site-footer">
-        <div class="container">
-            <div class="footer-grid">
-                <div>
-                    <a class="brand" href="{{ route('home') }}">Turath<span>Cars</span></a>
-                    <p class="muted">An independent broker connecting car owners and buyers across Egypt.</p>
-                </div>
-                <div>
-                    <h3>Explore</h3>
-                    <ul>
-                        <li><a href="{{ route('shop') }}">Shop cars</a></li>
-                        <li><a href="{{ route('about') }}">About us</a></li>
-                        <li><a href="{{ route('contact') }}">Contact</a></li>
-                    </ul>
-                </div>
-                <div>
-                    <h3>Get in touch</h3>
-                    <ul>
-                        <li>{{ config('turath.broker.phone') }}</li>
-                        <li>{{ config('turath.broker.email') }}</li>
-                        <li>{{ config('turath.broker.hours') }}</li>
-                    </ul>
-                </div>
+<main id="main">
+    @if(session('status'))
+        <div class="container mx-auto max-w-6xl px-4 pt-6">
+            <div data-flash role="status" class="flex items-center gap-3 rounded-xl border border-emerald-200 bg-emerald-50 px-4 py-3 text-sm font-semibold text-emerald-800">
+                <x-icon name="check-circle" class="h-5 w-5 shrink-0" /> {{ __(session('status')) }}
             </div>
-            <p class="copyright">&copy; {{ date('Y') }} {{ config('turath.broker.name') }}. We act as an independent broker only; we do not own the listed cars.</p>
         </div>
-    </footer>
+    @endif
+    @yield('content')
+</main>
 
-    <script src="{{ asset('js/app.js') }}" defer></script>
+@include('partials.footer')
+@include('partials.dock')
+
+<script src="{{ asset('js/site.js') }}" defer></script>
 </body>
 </html>

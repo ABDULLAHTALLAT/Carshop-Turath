@@ -1,97 +1,72 @@
 @extends('layouts.app')
 
-@section('title', 'Shop')
+@section('title', __('Shop'))
+
+@php
+    $units = \App\Models\Car::trafficUnits();
+    $sorts = ['newest' => 'Newest', 'price_asc' => 'Price: low to high', 'price_desc' => 'Price: high to low', 'year_desc' => 'Year: newest', 'mileage_asc' => 'Mileage: lowest'];
+    $active = collect($filters)->except('sort')->filter(fn ($v) => $v !== null && $v !== '');
+    $years = range((int) date('Y'), (int) date('Y') - 20);
+@endphp
 
 @section('content')
-<section class="section">
-    <div class="container">
-        <span class="eyebrow">Shop</span>
-        <h1>Cars for sale</h1>
+<section class="hero-bg relative overflow-hidden pb-20 pt-12 text-white">
+    <div class="pointer-events-none absolute -top-16 end-10 h-52 w-52 rounded-full bg-brand/20 blur-3xl float-slow" aria-hidden="true"></div>
+    <div class="relative mx-auto max-w-7xl px-4">
+        <nav class="hero-rise flex items-center gap-2 text-xs text-white/60" aria-label="{{ __('Breadcrumb') }}">
+            <a href="{{ route('home') }}" class="hover:text-brand">{{ __('Home') }}</a><x-icon name="chevron-right" class="h-3 w-3 flip-rtl" /><span class="text-white">{{ __('Shop') }}</span>
+        </nav>
+        <h1 class="hero-rise d-2 mt-3 text-3xl font-extrabold sm:text-4xl">{{ __('Cars for sale') }}</h1>
+        <p class="hero-rise d-3 mt-2 text-sm text-white/70"><span class="num font-bold text-brand-light">{{ number_format($cars->total()) }}</span> {{ __('cars match your search') }}</p>
+    </div>
+    <svg class="absolute inset-x-0 bottom-0 h-10 w-full text-white dark:text-[#0b1220]" viewBox="0 0 1200 40" preserveAspectRatio="none" aria-hidden="true"><path fill="currentColor" d="M0 40V18c240 20 520 22 760 8S1100 4 1200 14v26Z"/></svg>
+</section>
 
-        <form class="card filters" method="GET" action="{{ route('shop') }}">
-            <div class="field">
-                <label for="q">Search</label>
-                <input id="q" name="q" value="{{ $filters['q'] ?? '' }}" placeholder="Brand or model">
-            </div>
-            <div class="field">
-                <label for="brand">Brand</label>
-                <select id="brand" name="brand">
-                    <option value="">All</option>
-                    @foreach($brands as $b)
-                        <option value="{{ $b }}" @selected(($filters['brand'] ?? '') === $b)>{{ $b }}</option>
-                    @endforeach
-                </select>
-            </div>
-            <div class="field">
-                <label for="body_type">Body</label>
-                <select id="body_type" name="body_type">
-                    <option value="">All</option>
-                    @foreach(\App\Models\Car::BODY_TYPES as $b)
-                        <option @selected(($filters['body_type'] ?? '') === $b)>{{ $b }}</option>
-                    @endforeach
-                </select>
-            </div>
-            <div class="field">
-                <label for="governorate">Governorate</label>
-                <select id="governorate" name="governorate">
-                    <option value="">All</option>
-                    @foreach(\App\Models\Car::GOVERNORATES as $g)
-                        <option @selected(($filters['governorate'] ?? '') === $g)>{{ $g }}</option>
-                    @endforeach
-                </select>
-            </div>
-            <div class="field">
-                <label for="max_price">Max price (EGP)</label>
-                <input id="max_price" type="number" min="0" name="max_price" value="{{ $filters['max_price'] ?? '' }}">
-            </div>
-            <div class="field">
-                <label for="sort">Sort</label>
-                <select id="sort" name="sort">
-                    @foreach(['newest' => 'Newest', 'price_asc' => 'Price: low to high', 'price_desc' => 'Price: high to low', 'year_desc' => 'Year: newest'] as $value => $label)
-                        <option value="{{ $value }}" @selected(($filters['sort'] ?? 'newest') === $value)>{{ $label }}</option>
-                    @endforeach
-                </select>
-            </div>
-            <div class="filters-actions">
-                <button class="btn btn-primary" type="submit">Apply</button>
-                <a class="btn btn-ghost" href="{{ route('shop') }}">Reset</a>
-            </div>
-        </form>
+<section class="mx-auto grid max-w-7xl gap-8 px-4 py-10 lg:grid-cols-[300px_1fr]">
+    {{-- ============ Filters ============ --}}
+    <aside>
+        <details class="card lg:hidden" @if($active->isNotEmpty()) open @endif>
+            <summary class="flex items-center justify-between p-4 font-bold text-ink"><span class="flex items-center gap-2"><x-icon name="sliders" class="h-5 w-5 text-brand-dark" /> {{ __('Filters') }}</span><x-icon name="chevron-down" class="h-4 w-4" /></summary>
+            <div class="border-t border-slate-100 p-4">@include('shop._filters')</div>
+        </details>
+        <div class="card sticky top-24 hidden p-5 lg:block">
+            <h2 class="mb-4 flex items-center gap-2 text-sm font-extrabold text-ink"><x-icon name="sliders" class="h-5 w-5 text-brand-dark" /> {{ __('Filters') }}</h2>
+            @include('shop._filters')
+        </div>
+    </aside>
 
-        @if($cars->isEmpty())
-            <div class="card empty">
-                <h3>No cars match your filters</h3>
-                <p>Try removing a filter or <a href="{{ route('shop') }}" class="link-accent">see all cars</a>.</p>
-            </div>
-        @else
-            <p class="muted">{{ $cars->total() }} {{ \Illuminate\Support\Str::plural('car', $cars->total()) }} found</p>
-            <div class="grid">
-                @foreach($cars as $car)
-                    @include('partials.car-card', ['car' => $car])
+    {{-- ============ Results ============ --}}
+    <div>
+        <div class="mb-6 flex flex-wrap items-center justify-between gap-3">
+            <div class="flex flex-wrap gap-2">
+                @foreach($active as $key => $value)
+                    <a href="{{ route('shop', collect(request()->query())->except([$key, 'page'])->all()) }}" class="chip">
+                        {{ in_array($key, ['governorate', 'traffic_unit', 'color', 'brand', 'body_type', 'transmission', 'fuel', 'license_type', 'origin'], true) ? t($value) : $value }}
+                        <x-icon name="x" class="h-3 w-3" />
+                    </a>
                 @endforeach
             </div>
+            <form method="GET" action="{{ route('shop') }}" class="flex items-center gap-2">
+                @foreach(request()->except(['sort', 'page']) as $k => $v)@if(is_string($v))<input type="hidden" name="{{ $k }}" value="{{ $v }}">@endif @endforeach
+                <label for="sort" class="flex items-center gap-1.5 text-xs font-semibold text-slate-500"><x-icon name="repeat" class="h-4 w-4" /> {{ __('Sort') }}</label>
+                <select id="sort" name="sort" data-autosubmit class="field !min-h-[40px] !w-auto !py-1.5 text-xs font-semibold">
+                    @foreach($sorts as $value => $label)<option value="{{ $value }}" @selected(($filters['sort'] ?? 'newest') === $value)>{{ __($label) }}</option>@endforeach
+                </select>
+            </form>
+        </div>
 
-            @if($cars->hasPages())
-                <nav class="pagination" aria-label="Pagination">
-                    @if($cars->onFirstPage())
-                        <span class="disabled">&laquo;</span>
-                    @else
-                        <a href="{{ $cars->previousPageUrl() }}" rel="prev">&laquo;</a>
-                    @endif
-                    @foreach($cars->getUrlRange(1, $cars->lastPage()) as $page => $url)
-                        @if($page === $cars->currentPage())
-                            <span class="active" aria-current="page">{{ $page }}</span>
-                        @else
-                            <a href="{{ $url }}">{{ $page }}</a>
-                        @endif
-                    @endforeach
-                    @if($cars->hasMorePages())
-                        <a href="{{ $cars->nextPageUrl() }}" rel="next">&raquo;</a>
-                    @else
-                        <span class="disabled">&raquo;</span>
-                    @endif
-                </nav>
-            @endif
+        @if($cars->isEmpty())
+            <div class="card grid place-items-center px-6 py-20 text-center">
+                <span class="grid h-16 w-16 place-items-center rounded-2xl bg-brand-50 text-brand-dark"><x-icon name="search" class="h-8 w-8" /></span>
+                <h3 class="mt-5 text-lg font-extrabold text-ink">{{ __('No cars match your filters') }}</h3>
+                <p class="mt-1 text-sm text-slate-500">{{ __('Try removing a filter or searching a wider area.') }}</p>
+                <a href="{{ route('shop') }}" class="btn btn-brand mt-6"><x-icon name="repeat" class="h-4 w-4" /> {{ __('Reset filters') }}</a>
+            </div>
+        @else
+            <div class="grid gap-6 sm:grid-cols-2 xl:grid-cols-3">
+                @foreach($cars as $car)@include('partials.car-card', ['car' => $car])@endforeach
+            </div>
+            @include('partials.pagination', ['paginator' => $cars])
         @endif
     </div>
 </section>
