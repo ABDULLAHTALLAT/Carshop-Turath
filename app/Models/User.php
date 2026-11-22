@@ -4,6 +4,7 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Foundation\Auth\User as Authenticatable;
+use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Notifications\Notifiable;
 
 class User extends Authenticatable
@@ -11,7 +12,7 @@ class User extends Authenticatable
     use HasFactory, Notifiable;
 
     // is_admin is deliberately NOT mass assignable
-    protected $fillable = ['name', 'email', 'password'];
+    protected $fillable = ['name', 'email', 'phone', 'password'];
 
     protected $hidden = ['password', 'remember_token'];
 
@@ -21,5 +22,15 @@ class User extends Authenticatable
             'password' => 'hashed',
             'is_admin' => 'boolean',
         ];
+    }
+
+    public function cars(): HasMany
+    {
+        return $this->hasMany(Car::class);
+    }
+
+    public function homeRoute(): string
+    {
+        return $this->is_admin ? 'admin.dashboard' : 'owner.dashboard';
     }
 }
