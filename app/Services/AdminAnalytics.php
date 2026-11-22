@@ -15,7 +15,7 @@ class AdminAnalytics
 
         $total = Car::count();
         $status = Car::selectRaw('status, count(*) as n')->groupBy('status')->pluck('n', 'status')->all();
-        $live = Car::where('status', '!=', 'sold');
+        $live = Car::whereIn('status', ['available', 'reserved']);
 
         $inq30 = Inquiry::where('created_at', '>=', $now->subDays(30))->count();
         $inqPrev = Inquiry::whereBetween('created_at', [$now->subDays(60), $now->subDays(30)])->count();
@@ -40,9 +40,10 @@ class AdminAnalytics
             ],
             'attention' => [
                 'unread' => Inquiry::whereNull('read_at')->count(),
-                'expired_licenses' => Car::where('status', '!=', 'sold')->where('license_status', 'Expired')->count(),
-                'expiring' => Car::where('status', '!=', 'sold')->whereBetween('license_expiry', [$now->toDateString(), $now->addDays(30)->toDateString()])->count(),
+                'expired_licenses' => Car::visible()->where('license_status', 'Expired')->count(),
+                'expiring' => Car::visible()->whereBetween('license_expiry', [$now->toDateString(), $now->addDays(30)->toDateString()])->count(),
                 'reserved' => (int) ($status['reserved'] ?? 0),
+                'pending' => (int) ($status['pending'] ?? 0),
             ],
             'monthly' => $this->monthlyListings($now),
             'daily_inquiries' => $this->dailyInquiries($now),
