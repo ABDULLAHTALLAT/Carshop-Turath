@@ -1,6 +1,7 @@
 <?php
 
 use App\Http\Middleware\EnsureAdmin;
+use App\Http\Middleware\EnsureOwner;
 use App\Http\Middleware\SecurityHeaders;
 use App\Http\Middleware\SetLocale;
 use Illuminate\Foundation\Application;
@@ -21,10 +22,11 @@ return Application::configure(basePath: dirname(__DIR__))
 
         $middleware->alias([
             'admin' => EnsureAdmin::class,
+            'owner' => EnsureOwner::class,
         ]);
 
         $middleware->redirectGuestsTo(fn () => route('login'));
-        $middleware->redirectUsersTo(fn () => route('admin.dashboard'));
+        $middleware->redirectUsersTo(fn () => route(auth()->user()?->homeRoute() ?? 'home'));
     })
     ->withExceptions(function (Exceptions $exceptions): void {
         //
