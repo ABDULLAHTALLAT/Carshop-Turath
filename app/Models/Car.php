@@ -5,6 +5,7 @@ namespace App\Models;
 use App\Support\EgyptData;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Support\Str;
 
@@ -18,7 +19,7 @@ class Car extends Model
     public const LICENSE_TYPES = ['Private', 'Taxi', 'Transport'];
     public const ORIGINS = ['Local', 'Imported'];
     public const DRIVES = ['FWD', 'RWD', 'AWD', '4x4'];
-    public const STATUSES = ['available', 'reserved', 'sold'];
+    public const STATUSES = ['available', 'reserved', 'sold', 'pending'];
 
     // Admin-only flags, counters and the slug are never mass assignable
     protected $fillable = [
@@ -97,6 +98,11 @@ class Car extends Model
         return $this->hasMany(CarImage::class)->orderBy('position');
     }
 
+    public function owner(): BelongsTo
+    {
+        return $this->belongsTo(User::class, 'user_id');
+    }
+
     public function inquiries(): HasMany
     {
         return $this->hasMany(Inquiry::class);
@@ -129,7 +135,7 @@ class Car extends Model
 
     public function scopeVisible(Builder $query): Builder
     {
-        return $query->where('status', '!=', 'sold');
+        return $query->whereIn('status', ['available', 'reserved']);
     }
 
     public function scopeFilter(Builder $query, array $f): Builder
