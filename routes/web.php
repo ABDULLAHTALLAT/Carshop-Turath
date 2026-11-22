@@ -1,5 +1,9 @@
 <?php
 
+use App\Http\Controllers\Auth\RegisterController;
+use App\Http\Controllers\Owner\CarController as OwnerCarController;
+use App\Http\Controllers\Owner\DashboardController as OwnerDashboardController;
+use App\Http\Controllers\Owner\InquiryController as OwnerInquiryController;
 use App\Http\Controllers\Admin\CarController as AdminCarController;
 use App\Http\Controllers\Admin\DashboardController;
 use App\Http\Controllers\Admin\InquiryController as AdminInquiryController;
@@ -40,10 +44,22 @@ Route::post('/contact', [ContactController::class, 'store'])
     ->name('contact.store');
 
 Route::middleware('guest')->group(function () {
+    Route::get('/register', [RegisterController::class, 'create'])->name('register');
+    Route::post('/register', [RegisterController::class, 'store'])->middleware('throttle:register')->name('register.store');
+
     Route::get('/login', [LoginController::class, 'create'])->name('login');
     Route::post('/login', [LoginController::class, 'store'])
         ->middleware('throttle:login')
         ->name('login.store');
+});
+
+Route::middleware(['auth', 'owner'])->prefix('owner')->name('owner.')->group(function () {
+    Route::post('/logout', [LoginController::class, 'destroy'])->name('logout');
+    Route::get('/', [OwnerDashboardController::class, 'index'])->name('dashboard');
+    Route::resource('cars', OwnerCarController::class)->except(['show']);
+    Route::patch('/cars/{car}/sold', [OwnerCarController::class, 'sold'])->name('cars.sold');
+    Route::delete('/cars/{car}/images/{image}', [OwnerCarController::class, 'destroyImage'])->name('cars.images.destroy');
+    Route::get('/messages', [OwnerInquiryController::class, 'index'])->name('inquiries.index');
 });
 
 Route::middleware(['auth', 'admin'])->prefix('admin')->name('admin.')->group(function () {
