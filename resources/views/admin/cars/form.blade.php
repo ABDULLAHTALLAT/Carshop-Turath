@@ -1,6 +1,7 @@
-@extends('layouts.admin')
+@extends(($mode ?? 'admin') === 'owner' ? 'layouts.owner' : 'layouts.admin')
 
 @php
+    $p = $mode ?? 'admin';
     $editing = $car->exists;
     $v = fn ($key, $default = '') => old($key, $car->{$key} ?? $default);
     $featuresText = old('features', is_array($car->features) ? implode(', ', $car->features) : '');
@@ -17,14 +18,14 @@
 @section('content')
 <div class="mb-6 flex flex-wrap items-center justify-between gap-3">
     <h1 class="flex items-center gap-2 text-2xl font-extrabold text-ink"><x-icon :name="$editing ? 'edit' : 'plus'" class="h-6 w-6 text-brand-dark" /> {{ $editing ? __('Edit car') : __('Add car') }}</h1>
-    <a class="btn btn-ghost" href="{{ route('admin.cars.index') }}"><x-icon name="arrow-left" class="h-4 w-4 flip-rtl" /> {{ __('Back to cars') }}</a>
+    <a class="btn btn-ghost" href="{{ route($p.'.cars.index') }}"><x-icon name="arrow-left" class="h-4 w-4 flip-rtl" /> {{ __('Back to cars') }}</a>
 </div>
 
 @if($errors->any())
     <div class="mb-6 flex items-center gap-3 rounded-xl border border-rose-200 bg-rose-50 px-4 py-3 text-sm font-semibold text-rose-700" role="alert"><x-icon name="alert" class="h-5 w-5" /> {{ __('Please fix the highlighted fields below.') }}</div>
 @endif
 
-<form method="POST" enctype="multipart/form-data" action="{{ $editing ? route('admin.cars.update', $car) : route('admin.cars.store') }}" class="space-y-6">
+<form method="POST" enctype="multipart/form-data" action="{{ $editing ? route($p.'.cars.update', $car) : route($p.'.cars.store') }}" class="space-y-6">
     @csrf
     @if($editing) @method('PUT') @endif
 
@@ -93,6 +94,7 @@
         </div>
     </section>
 
+    @if($p === 'admin')
     <section class="card p-6">
         <h2 class="mb-5 flex items-center gap-2 text-[15px] font-extrabold text-ink"><x-icon name="user" class="h-5 w-5 text-brand-dark" /> {{ __('Seller (private) and status') }}</h2>
         <div class="grid gap-5 sm:grid-cols-2 lg:grid-cols-4">
@@ -105,6 +107,10 @@
             </div>
         </div>
     </section>
+
+    @else
+    <div class="flex items-start gap-3 rounded-2xl border border-sky-200 bg-sky-50 p-5 text-sm text-sky-900"><x-icon name="shield-check" class="mt-0.5 h-5 w-5 shrink-0" /> <p>{{ __('After you save, the broker reviews your car and publishes it. Your phone number stays private.') }}</p></div>
+    @endif
 
     <section class="card p-6">
         <h2 class="mb-5 flex items-center gap-2 text-[15px] font-extrabold text-ink"><x-icon name="image" class="h-5 w-5 text-brand-dark" /> {{ __('Photos') }}</h2>
@@ -123,14 +129,14 @@
     </section>
 
     <div class="flex justify-end gap-3">
-        <a class="btn btn-ghost" href="{{ route('admin.cars.index') }}">{{ __('Cancel') }}</a>
+        <a class="btn btn-ghost" href="{{ route($p.'.cars.index') }}">{{ __('Cancel') }}</a>
         <button class="btn btn-brand" type="submit"><x-icon name="check-circle" class="h-5 w-5" /> {{ $editing ? __('Save changes') : __('Create car') }}</button>
     </div>
 </form>
 
 @if($editing)
     @foreach($car->images as $image)
-        <form id="del-{{ $image->id }}" method="POST" action="{{ route('admin.cars.images.destroy', [$car, $image]) }}" data-confirm="{{ __('Remove this photo?') }}">@csrf @method('DELETE')</form>
+        <form id="del-{{ $image->id }}" method="POST" action="{{ route($p.'.cars.images.destroy', [$car, $image]) }}" data-confirm="{{ __('Remove this photo?') }}">@csrf @method('DELETE')</form>
     @endforeach
 @endif
 @endsection
