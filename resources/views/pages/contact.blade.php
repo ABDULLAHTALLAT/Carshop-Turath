@@ -1,6 +1,7 @@
 @extends('layouts.app')
 
-@section('title', __('Contact'))
+@section('title', __('Contact us'))
+@section('description', __('Ask about a listing, or tell us about the car you want to sell.'))
 
 @section('content')
 <section class="hero-bg relative overflow-hidden pb-24 pt-12 text-white">
@@ -10,7 +11,7 @@
         <h1 class="hero-rise d-2 mt-4 text-3xl font-extrabold sm:text-4xl">{{ __('Let us talk about your next car') }}</h1>
         <p class="hero-rise d-3 mt-3 max-w-xl text-sm leading-7 text-white/70">{{ __('Ask about a listing, or tell us about the car you want to sell.') }}</p>
     </div>
-    <svg class="absolute inset-x-0 bottom-0 h-10 w-full text-white dark:text-[#0b1220]" viewBox="0 0 1200 40" preserveAspectRatio="none" aria-hidden="true"><path fill="currentColor" d="M0 40V18c240 20 520 22 760 8S1100 4 1200 14v26Z"/></svg>
+    <svg class="absolute inset-x-0 bottom-0 h-10 w-full text-white" viewBox="0 0 1200 40" preserveAspectRatio="none" aria-hidden="true"><path fill="currentColor" d="M0 40V18c240 20 520 22 760 8S1100 4 1200 14v26Z"/></svg>
 </section>
 
 <section class="mx-auto -mt-12 grid max-w-7xl gap-8 px-4 pb-6 lg:grid-cols-[1.4fr_1fr]">
