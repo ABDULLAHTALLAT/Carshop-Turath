@@ -9,7 +9,7 @@
 </div>
 
 <article class="card max-w-3xl p-6 sm:p-8">
-    <div class="flex items-center gap-4 border-b border-slate-100 pb-5 dark:border-slate-800">
+    <div class="flex items-center gap-4 border-b border-slate-100 pb-5">
         <span class="grid h-12 w-12 place-items-center rounded-full bg-brand-50 text-lg font-extrabold text-brand-dark">{{ mb_strtoupper(mb_substr($inquiry->name, 0, 1)) }}</span>
         <div class="min-w-0"><b class="block text-ink">{{ $inquiry->name }}</b>
             <p class="flex flex-wrap items-center gap-x-4 gap-y-1 text-[12px] text-slate-500"><span class="inline-flex items-center gap-1" dir="ltr"><x-icon name="mail" class="h-3.5 w-3.5" /> {{ $inquiry->email }}</span>@if($inquiry->phone)<span class="inline-flex items-center gap-1" dir="ltr"><x-icon name="phone" class="h-3.5 w-3.5" /> {{ $inquiry->phone }}</span>@endif<span class="num inline-flex items-center gap-1"><x-icon name="clock" class="h-3.5 w-3.5" /> {{ $inquiry->created_at->format('d M Y, H:i') }}</span></p></div>
