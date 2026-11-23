@@ -3,7 +3,7 @@
     <a href="{{ route('shop.show', $car) }}" class="block" aria-label="{{ $car->display_title }}">
         <div class="car-stage relative aspect-[16/10] overflow-hidden">
             @if($car->images->isNotEmpty())
-                <img src="{{ $car->cover_url }}" alt="{{ $car->display_title }}" loading="lazy" class="h-full w-full object-cover opacity-95 transition duration-500 group-hover:scale-105">
+                <img src="{{ $car->cover_url }}" alt="{{ $car->display_title }}" loading="lazy" class="h-full w-full object-contain p-5 drop-shadow-xl transition duration-500 group-hover:scale-105">
             @else
                 <div class="grid h-full place-items-center px-6 pb-3 pt-6">
                     <x-car-art :type="$car->body_type" :color="$car->color_hex" :label="$car->display_title" class="car-art w-full max-w-[19rem]" />
