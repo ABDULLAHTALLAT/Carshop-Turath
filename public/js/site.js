@@ -11,7 +11,7 @@
 
   // Flash messages fade out by themselves (errors stay)
   $$('[data-flash][role=status]').forEach(function (el) {
-    setTimeout(function () { el.style.transition = 'opacity .4s'; el.style.opacity = '0'; setTimeout(function () { el.remove(); }, 400); }, 6000);
+    setTimeout(function () { el.remove(); }, 6000);
   });
 
   // Confirm destructive actions + stop double submits
@@ -31,7 +31,7 @@
     if (top) { top.classList.toggle('hidden', y < 500); top.classList.toggle('flex', y >= 500); if (y >= 500) top.classList.add('dock-pop'); }
   }
   window.addEventListener('scroll', onScroll, { passive: true }); onScroll();
-  if (top) top.addEventListener('click', function () { window.scrollTo({ top: 0, behavior: 'smooth' }); });
+  if (top) top.addEventListener('click', function () { window.scrollTo({ top: 0, behavior: 'auto' }); });
 
   // Mobile drawer (site + admin)
   var drawer = $('[data-drawer]'), overlay = $('[data-drawer-overlay]');
@@ -49,28 +49,8 @@
   if (overlay) overlay.addEventListener('click', function () { setDrawer(false); });
   document.addEventListener('keydown', function (e) { if (e.key === 'Escape') setDrawer(false); });
 
-  // Reveal on scroll + count-up numbers
-  var countUp = function (el) {
-    var to = parseInt(el.getAttribute('data-count'), 10) || 0, t0 = null;
-    if (reduce) { el.textContent = to.toLocaleString('en-US'); return; }
-    var step = function (t) { t0 = t0 || t; var p = Math.min((t - t0) / 1400, 1); el.textContent = Math.round(to * (1 - Math.pow(1 - p, 3))).toLocaleString('en-US'); if (p < 1) requestAnimationFrame(step); };
-    requestAnimationFrame(step);
-  };
-  if ('IntersectionObserver' in window) {
-    var io = new IntersectionObserver(function (entries) {
-      entries.forEach(function (e) {
-        if (!e.isIntersecting) return;
-        e.target.classList.add('is-visible');
-        $$('[data-count]', e.target).forEach(countUp);
-        if (e.target.hasAttribute('data-count')) countUp(e.target);
-        io.unobserve(e.target);
-      });
-    }, { threshold: .12 });
-    $$('.reveal, .reveal-l, .reveal-r, [data-count]').forEach(function (el) { io.observe(el); });
-  } else {
-    $$('.reveal, .reveal-l, .reveal-r').forEach(function (el) { el.classList.add('is-visible'); });
-    $$('[data-count]').forEach(countUp);
-  }
+  // Numbers are shown as they are (no counting animation)
+  $$('[data-count]').forEach(function (el) { el.textContent = (parseInt(el.getAttribute('data-count'), 10) || 0).toLocaleString('en-US'); });
 
   // Horizontal rows with arrow buttons (icons only)
   $$('[data-snap-prev],[data-snap-next]').forEach(function (b) {
@@ -79,7 +59,7 @@
       var row = document.getElementById(b.getAttribute('data-snap-prev') || b.getAttribute('data-snap-next'));
       if (!row) return;
       var dir = (forward ? 1 : -1) * (rtl ? -1 : 1);
-      row.scrollBy({ left: dir * Math.max(300, row.clientWidth * .8), behavior: 'smooth' });
+      row.scrollBy({ left: dir * Math.max(300, row.clientWidth * .8), behavior: 'auto' });
     });
   });
 
@@ -96,7 +76,7 @@
     }
     function go(i) {
       idx = (i + slides.length) % slides.length;
-      track.scrollTo({ left: (rtl ? -1 : 1) * idx * track.clientWidth, behavior: reduce ? 'auto' : 'smooth' });
+      track.scrollTo({ left: (rtl ? -1 : 1) * idx * track.clientWidth, behavior: 'auto' });
       mark(idx);
     }
     var prev = $('[data-gal-prev]', g), next = $('[data-gal-next]', g);
@@ -196,7 +176,7 @@
     var next = function () {
       var old = vids[cur]; cur = (cur + 1) % vids.length; var nu = vids[cur];
       play(nu); nu.classList.add('is-active');
-      setTimeout(function () { old.classList.remove('is-active'); try { old.pause(); } catch (e) {} }, 520);
+      old.classList.remove('is-active'); try { old.pause(); } catch (e) {}
     };
     vids.forEach(function (v) { v.addEventListener('ended', function () { if (vids[cur] === v) next(); }); });
     if (!reduce) play(vids[0]);
