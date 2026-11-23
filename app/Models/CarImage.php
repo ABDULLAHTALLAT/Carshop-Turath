@@ -17,6 +17,7 @@ class CarImage extends Model
 
     public function getUrlAttribute(): string
     {
-        return Storage::disk('public')->url($this->path);
+        // Photos that ship with the app live in public/img; uploads live on the public disk
+        return str_starts_with($this->path, 'img/') ? asset($this->path) : Storage::disk('public')->url($this->path);
     }
 }
