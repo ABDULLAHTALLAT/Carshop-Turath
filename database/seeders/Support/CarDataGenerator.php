@@ -2,6 +2,7 @@
 
 namespace Database\Seeders\Support;
 
+use App\Support\CarPhotos;
 use App\Support\EgyptData;
 use DateTimeImmutable;
 
@@ -13,8 +14,17 @@ class CarDataGenerator
 {
     private array $slugs = [];
 
+    /** row index => photo file (without extension) */
+    private array $photos = [];
+
     public function __construct(private int $seed = 2026)
     {
+    }
+
+    /** @return array<int, string> */
+    public function photos(): array
+    {
+        return $this->photos;
     }
 
     /** @return array<int, array<string, mixed>> */
@@ -28,6 +38,8 @@ class CarDataGenerator
         $colors = array_keys(EgyptData::COLORS);
         $currentYear = (int) $now->format('Y');
         $rows = [];
+        $this->photos = [];
+        $photoModels = array_values(array_filter($models, fn ($m) => CarPhotos::variants($m[0], $m[1])));
 
         // Big cities get most of the listings, like the real market
         $govWeights = [];
@@ -44,10 +56,21 @@ class CarDataGenerator
             $city = $this->pick(array_keys($cities));
             $unit = $this->pick(array_keys($units));
 
-            [$brand, $model, $body, $cc, $newK, $firstYear, $fuel, $origin] = $models[mt_rand(0, count($models) - 1)];
+            // About a quarter of the listings use one of the real photos we have
+            $usePhoto = $photoModels && mt_rand(1, 100) <= 26;
+            [$brand, $model, $body, $cc, $newK, $firstYear, $fuel, $origin] = $usePhoto
+                ? $photoModels[mt_rand(0, count($photoModels) - 1)]
+                : $models[mt_rand(0, count($models) - 1)];
 
             $minYear = max($firstYear, $currentYear - 17);
             $year = $this->skewedYear($minYear, $currentYear);
+
+            $photoColor = null;
+            if ($usePhoto) {
+                [$file, $photoColor, $body, $from, $to] = $this->pick(CarPhotos::variants($brand, $model));
+                $year = mt_rand($from, min($to, $currentYear));
+                $this->photos[$i] = $file;
+            }
             $age = max(0, $currentYear - $year);
 
             $mileage = (int) round(max(1500, ($age * mt_rand(11000, 23000)) + mt_rand(1000, 9000)) / 500) * 500;
@@ -68,7 +91,7 @@ class CarDataGenerator
                 default => ($body === 'SUV' && in_array($model, ['Fortuner', 'Kodiaq', 'Tiggo 8', 'Sorento'], true) ? 7 : 5),
             };
 
-            $color = $this->colorFor($colors, $brand);
+            $color = $photoColor ?? $this->colorFor($colors, $brand);
 
             // Price: depreciation by age, adjusted by mileage and condition
             $price = $newK * 1000 * (0.9 ** $age);
@@ -137,8 +160,9 @@ class CarDataGenerator
             ];
         }
 
-        // Feature the ones that look best: available, nice condition, newer
-        $candidates = array_keys(array_filter($rows, fn ($r) => $r['status'] === 'available' && $r['condition'] === 'Excellent' && $r['year'] >= $currentYear - 5));
+        // Feature the ones that look best: available, nice condition, recent, and with a real photo first
+        $candidates = array_keys(array_filter($rows, fn ($r) => $r['status'] === 'available' && in_array($r['condition'], ['Excellent', 'Very Good'], true) && $r['year'] >= $currentYear - 9));
+        usort($candidates, fn ($a, $b) => isset($this->photos[$b]) <=> isset($this->photos[$a]) ?: $a <=> $b);
         foreach (array_slice($candidates, 0, 12) as $idx) {
             $rows[$idx]['is_featured'] = 1;
         }
