@@ -132,19 +132,37 @@
     </div>
 </section>
 
-{{-- ============================== BRANDS MARQUEE ============================== --}}
-<section class="mt-24 overflow-hidden border-y border-slate-100 bg-slate-50 py-8" aria-label="{{ __('Brands') }}">
-    <div class="marquee overflow-hidden" dir="ltr">
-        <div class="marquee-track flex w-max items-center gap-4">
-            @foreach([1, 2] as $pass)
-                @foreach($brands as $brand => $n)
-                    <a href="{{ route('shop', ['brand' => $brand]) }}" @if($pass === 2) aria-hidden="true" tabindex="-1" @endif class="flex items-center gap-3 rounded-full border border-slate-200 bg-white px-5 py-2.5 text-sm font-bold text-ink transition hover:border-brand hover:text-brand-dark">
-                        <x-icon name="car" class="h-4 w-4 text-brand-dark" /> {{ t($brand) }} <span class="num rounded-full bg-brand-50 px-2 py-0.5 text-[11px] text-brand-dark">{{ $n }}</span>
-                    </a>
-                @endforeach
+{{-- ============================== BRANDS (real photos) ============================== --}}
+@php
+    $brandPhotos = [];
+    foreach (\App\Support\CarPhotos::MAP as $key => $variants) {
+        [$b] = explode('|', $key);
+        $brandPhotos[$b] ??= $variants[0][0];
+    }
+    $withPhoto = collect($brands)->filter(fn ($n, $b) => isset($brandPhotos[$b]));
+    $others = collect($brands)->reject(fn ($n, $b) => isset($brandPhotos[$b]));
+@endphp
+<section class="mx-auto mt-24 max-w-7xl px-4" aria-label="{{ __('Brands') }}">
+    <div class="reveal mb-10 text-center">
+        <span class="eyebrow">{{ __('Browse by brand') }}</span>
+        <h2 class="mt-2 text-3xl font-extrabold text-ink">{{ __('Popular brands') }}</h2>
+        <span class="bar mx-auto mt-4"></span>
+    </div>
+    <div class="grid grid-cols-2 gap-4 md:grid-cols-5">
+        @foreach($withPhoto as $brand => $n)
+            <a href="{{ route('shop', ['brand' => $brand]) }}" class="reveal card group overflow-hidden text-center d-{{ ($loop->index % 4) + 1 }}">
+                <div class="car-stage grid aspect-[4/3] place-items-center p-4"><img src="{{ asset('img/cars/'.$brandPhotos[$brand].'.webp') }}" alt="{{ t($brand) }}" loading="lazy" class="max-h-full w-full object-contain drop-shadow-xl transition duration-500 group-hover:scale-110"></div>
+                <div class="p-4"><b class="block text-sm font-extrabold text-ink">{{ t($brand) }}</b><span class="num text-[11px] text-slate-500">{{ $n }} {{ __('cars') }}</span></div>
+            </a>
+        @endforeach
+    </div>
+    @if($others->isNotEmpty())
+        <div class="mt-6 flex flex-wrap justify-center gap-2">
+            @foreach($others->take(14) as $brand => $n)
+                <a href="{{ route('shop', ['brand' => $brand]) }}" class="rounded-full border border-slate-200 bg-white px-4 py-2 text-[13px] font-bold text-ink transition hover:border-brand hover:text-brand-dark">{{ t($brand) }} <span class="num ms-1 text-[11px] text-slate-400">{{ $n }}</span></a>
             @endforeach
         </div>
-    </div>
+    @endif
 </section>
 
 {{-- ============================== GOVERNORATES ============================== --}}
@@ -156,10 +174,16 @@
     </div>
     <div class="grid grid-cols-2 gap-4 md:grid-cols-4">
         @foreach($byGov as $gov => $n)
-            <a href="{{ route('shop', ['governorate' => $gov]) }}" class="reveal card group flex items-center justify-between gap-3 p-5 d-{{ ($loop->index % 4) + 1 }}">
-                <span class="flex items-center gap-3"><span class="grid h-11 w-11 place-items-center rounded-xl bg-brand-50 text-brand-dark transition group-hover:bg-brand group-hover:text-ink"><x-icon name="pin" class="h-5 w-5" /></span>
-                    <b class="text-sm font-extrabold text-ink">{{ t($gov) }}</b></span>
-                <span class="num text-xs font-bold text-slate-500">{{ $n }}</span>
+            @php $slugG = \Illuminate\Support\Str::slug($gov); $placeFile = public_path('img/places/'.$slugG.'.jpg'); @endphp
+            <a href="{{ route('shop', ['governorate' => $gov]) }}" class="reveal group relative isolate flex aspect-[4/3] items-end overflow-hidden rounded-2xl bg-navy d-{{ ($loop->index % 4) + 1 }}">
+                @if(is_file($placeFile))
+                    <img src="{{ asset('img/places/'.$slugG.'.jpg') }}" alt="{{ t($gov) }}" loading="lazy" class="absolute inset-0 -z-10 h-full w-full object-cover transition duration-700 group-hover:scale-110">
+                @else
+                    <span class="hero-bg absolute inset-0 -z-10" aria-hidden="true"></span>
+                    <x-icon name="map" class="absolute end-4 top-4 -z-10 h-12 w-12 text-white/15" />
+                @endif
+                <span class="absolute inset-0 -z-10 bg-gradient-to-t from-navy/85 via-navy/20 to-transparent"></span>
+                <span class="flex w-full items-center justify-between p-4 text-white"><b class="text-sm font-extrabold">{{ t($gov) }}</b><span class="num rounded-full bg-white/20 px-2.5 py-0.5 text-[11px] font-bold backdrop-blur">{{ $n }} {{ __('cars') }}</span></span>
             </a>
         @endforeach
     </div>
