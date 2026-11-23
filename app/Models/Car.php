@@ -207,6 +207,12 @@ class Car extends Model
         return $this->licensed_since ? max(0, (int) date('Y') - $this->licensed_since) : null;
     }
 
+    /** [lat, lng] of the governorate centre: an approximate area, never the seller's address */
+    public function getCoordinatesAttribute(): ?array
+    {
+        return \App\Support\EgyptData::COORDS[$this->governorate] ?? null;
+    }
+
     public function getCoverUrlAttribute(): ?string
     {
         return $this->images->first()?->url;
