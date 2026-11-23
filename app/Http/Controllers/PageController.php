@@ -22,7 +22,7 @@ class PageController extends Controller
                 ],
                 'byBody' => Car::visible()->selectRaw('body_type, count(*) as total')->groupBy('body_type')->pluck('total', 'body_type')->all(),
                 'byGov' => Car::visible()->selectRaw('governorate, count(*) as total')->groupBy('governorate')->orderByDesc('total')->take(8)->pluck('total', 'governorate')->all(),
-                'brands' => Car::visible()->selectRaw('brand, count(*) as total')->groupBy('brand')->orderByDesc('total')->take(16)->pluck('total', 'brand')->all(),
+                'brands' => Car::visible()->selectRaw('brand, count(*) as total')->groupBy('brand')->orderByDesc('total')->take(30)->pluck('total', 'brand')->all(),
                 'price' => [
                     'min' => (int) Car::visible()->min('price'),
                     'max' => (int) Car::visible()->max('price'),
