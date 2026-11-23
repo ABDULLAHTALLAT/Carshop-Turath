@@ -2,6 +2,7 @@
 
 namespace Database\Seeders;
 
+use App\Support\CarPhotos;
 use Database\Seeders\Support\CarDataGenerator;
 use DateTimeImmutable;
 use Illuminate\Database\Seeder;
@@ -20,11 +21,20 @@ class CarSeeder extends Seeder
             return;
         }
 
-        $rows = (new CarDataGenerator(2026))->generate(self::COUNT, new DateTimeImmutable('now'));
+        $generator = new CarDataGenerator(2026);
+        $rows = $generator->generate(self::COUNT, new DateTimeImmutable('now'));
 
         foreach (array_chunk($rows, 60) as $chunk) {
             DB::table('cars')->insert($chunk);
         }
+
+        // Real photos for the cars that use them
+        $ids = DB::table('cars')->pluck('id', 'slug');
+        $images = [];
+        foreach ($generator->photos() as $index => $file) {
+            $images[] = ['car_id' => $ids[$rows[$index]['slug']], 'path' => CarPhotos::path($file), 'position' => 1, 'created_at' => now(), 'updated_at' => now()];
+        }
+        DB::table('car_images')->insert($images);
 
         $this->command?->info(count($rows).' demo cars created.');
     }
