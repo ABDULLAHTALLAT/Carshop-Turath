@@ -3,7 +3,7 @@
     <a href="{{ route('shop.show', $car) }}" class="block" aria-label="{{ $car->display_title }}">
         <div class="car-stage relative aspect-[16/10] overflow-hidden">
             @if($car->images->isNotEmpty())
-                <img src="{{ $car->cover_url }}" alt="{{ $car->display_title }}" loading="lazy" class="h-full w-full object-contain p-5 drop-shadow-xl transition duration-500 group-hover:scale-105">
+                <img src="{{ $car->cover_url }}" alt="{{ $car->display_title }}" loading="lazy" class="h-full w-full object-contain p-5 drop-shadow-xl">
             @else
                 <div class="grid h-full place-items-center px-6 pb-3 pt-6">
                     <x-car-art :type="$car->body_type" :color="$car->color_hex" :label="$car->display_title" class="car-art w-full max-w-[19rem]" />
@@ -33,7 +33,7 @@
                     <p class="num text-lg font-extrabold text-brand-dark">{{ egp($car->price) }}</p>
                     @if($car->negotiable)<p class="text-[10px] font-semibold text-emerald-600">{{ __('Price negotiable') }}</p>@endif
                 </div>
-                <span class="grid h-10 w-10 place-items-center rounded-full bg-brand-50 text-brand-dark transition group-hover:bg-navy group-hover:text-white"><x-icon name="arrow-right" class="h-5 w-5 flip-rtl" /></span>
+                <span class="grid h-10 w-10 place-items-center rounded-full bg-brand-50 text-brand-dark group-hover:bg-navy group-hover:text-white"><x-icon name="arrow-right" class="h-5 w-5 flip-rtl" /></span>
             </div>
         </div>
     </a>

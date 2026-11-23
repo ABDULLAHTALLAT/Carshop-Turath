@@ -30,7 +30,7 @@
 
 <div class="mb-8 grid grid-cols-2 gap-4 xl:grid-cols-4">
     @foreach($kpiCards as $i => [$icon, $label, $num, $text, $grad, $tint])
-        <div class="kpi card reveal border-s-4 bg-gradient-to-br {{ $tint }} to-white p-5 d-{{ ($i % 4) + 1 }}">
+        <div class="kpi card border-s-4 bg-gradient-to-br {{ $tint }} to-white p-5">
             <span class="grid h-11 w-11 place-items-center rounded-xl bg-gradient-to-br {{ $grad }} text-white shadow-lg"><x-icon :name="$icon" class="h-5 w-5" /></span>
             <p class="mt-4 text-[12px] font-semibold text-slate-500">{{ __($label) }}</p>
             @if($num !== null)<b class="num block text-2xl font-extrabold text-ink" data-count="{{ $num }}">0</b>@else<b class="num block truncate text-xl font-extrabold text-ink">{{ $text }}</b>@endif

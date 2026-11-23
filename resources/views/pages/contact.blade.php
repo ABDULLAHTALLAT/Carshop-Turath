@@ -5,11 +5,11 @@
 
 @section('content')
 <section class="hero-bg relative overflow-hidden pb-24 pt-12 text-white">
-    <div class="pointer-events-none absolute -top-16 start-10 h-52 w-52 rounded-full bg-brand/20 blur-3xl float-slow" aria-hidden="true"></div>
+    <div class="pointer-events-none absolute -top-16 start-10 h-52 w-52 rounded-full bg-brand/20 blur-3xl" aria-hidden="true"></div>
     <div class="relative mx-auto max-w-7xl px-4">
-        <span class="hero-rise glass inline-flex items-center gap-2 rounded-full px-4 py-1.5 text-xs font-bold text-brand-light"><x-icon name="mail" class="h-4 w-4" /> {{ __('Contact') }}</span>
-        <h1 class="hero-rise d-2 mt-4 text-3xl font-extrabold sm:text-4xl">{{ __('Let us talk about your next car') }}</h1>
-        <p class="hero-rise d-3 mt-3 max-w-xl text-sm leading-7 text-white/70">{{ __('Ask about a listing, or tell us about the car you want to sell.') }}</p>
+        <span class="glass inline-flex items-center gap-2 rounded-full px-4 py-1.5 text-xs font-bold text-brand-light"><x-icon name="mail" class="h-4 w-4" /> {{ __('Contact') }}</span>
+        <h1 class="mt-4 text-3xl font-extrabold sm:text-4xl">{{ __('Let us talk about your next car') }}</h1>
+        <p class="mt-3 max-w-xl text-sm leading-7 text-white/70">{{ __('Ask about a listing, or tell us about the car you want to sell.') }}</p>
     </div>
     <svg class="absolute inset-x-0 bottom-0 h-10 w-full text-white" viewBox="0 0 1200 40" preserveAspectRatio="none" aria-hidden="true"><path fill="currentColor" d="M0 40V18c240 20 520 22 760 8S1100 4 1200 14v26Z"/></svg>
 </section>
@@ -49,7 +49,7 @@
 
     <aside class="relative z-10 space-y-4">
         @foreach([['phone', 'Phone', config('turath.broker.phone'), true], ['mail', 'Email', config('turath.broker.email'), true], ['clock', 'Working hours', __('Sat - Thu, 10:00 - 20:00'), false], ['pin', 'Location', __('Cairo, Egypt'), false]] as $i => [$icon, $label, $value, $ltr])
-            <div class="reveal card flex items-center gap-4 p-5 d-{{ $i + 1 }}">
+            <div class="card flex items-center gap-4 p-5">
                 <span class="grid h-12 w-12 shrink-0 place-items-center rounded-2xl bg-brand-50 text-brand-dark"><x-icon :name="$icon" class="h-6 w-6" /></span>
                 <div class="min-w-0"><p class="text-[11px] text-slate-500">{{ __($label) }}</p><p class="num truncate text-sm font-extrabold text-ink" @if($ltr) dir="ltr" @endif>{{ $value }}</p></div>
             </div>

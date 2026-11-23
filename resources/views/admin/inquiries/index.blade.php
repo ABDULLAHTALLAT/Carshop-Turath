@@ -10,7 +10,7 @@
 
 <div class="card divide-y divide-slate-100 overflow-hidden">
     @forelse($inquiries as $inq)
-        <a href="{{ route('admin.inquiries.show', $inq) }}" class="flex items-start gap-4 p-5 transition hover:bg-slate-50">
+        <a href="{{ route('admin.inquiries.show', $inq) }}" class="flex items-start gap-4 p-5 hover:bg-slate-50">
             <span class="grid h-11 w-11 shrink-0 place-items-center rounded-full bg-brand-50 font-extrabold text-brand-dark">{{ mb_strtoupper(mb_substr($inq->name, 0, 1)) }}</span>
             <div class="min-w-0 flex-1">
                 <div class="flex items-center gap-2"><b class="truncate text-sm text-ink">{{ $inq->subject }}</b>@if(is_null($inq->read_at))<span class="rounded-full bg-rose-500 px-2 py-0.5 text-[10px] font-extrabold text-white">{{ __('New') }}</span>@endif</div>

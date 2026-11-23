@@ -51,7 +51,7 @@
 {{-- KPIs --}}
 <div class="mb-8 grid grid-cols-2 gap-4 xl:grid-cols-4">
     @foreach($kpis as $i => [$icon, $label, $num, $text, $grad, $delta])
-        <div class="kpi card reveal border-s-4 p-5 d-{{ ($i % 4) + 1 }} {{ $tints[$i % count($tints)] }}">
+        <div class="kpi card border-s-4 p-5 {{ $tints[$i % count($tints)] }}">
             <div class="flex items-center justify-between">
                 <span class="grid h-11 w-11 place-items-center rounded-xl bg-gradient-to-br {{ $grad }} text-white shadow-lg"><x-icon :name="$icon" class="h-5 w-5" /></span>
                 @if($delta !== null)<span class="num inline-flex items-center gap-1 rounded-full px-2 py-0.5 text-[11px] font-extrabold {{ $delta >= 0 ? 'bg-emerald-50 text-emerald-700' : 'bg-rose-50 text-rose-700' }}"><x-icon :name="$delta >= 0 ? 'trending-up' : 'arrow-right'" class="h-3 w-3" /> {{ $delta > 0 ? '+' : '' }}{{ $delta }}%</span>@endif
@@ -114,7 +114,7 @@
         <h2 class="mb-5 flex items-center gap-2 text-[15px] font-extrabold text-ink"><x-icon name="eye" class="h-5 w-5 text-brand-dark" /> {{ __('Most viewed') }}</h2>
         <ol class="space-y-3">
             @foreach($a['top_viewed'] as $i => $car)
-                <li><a href="{{ route('shop.show', $car) }}" target="_blank" rel="noopener" class="flex items-center gap-3 rounded-xl p-2 transition hover:bg-slate-50">
+                <li><a href="{{ route('shop.show', $car) }}" target="_blank" rel="noopener" class="flex items-center gap-3 rounded-xl p-2 hover:bg-slate-50">
                     <span class="num grid h-7 w-7 shrink-0 place-items-center rounded-full bg-brand-50 text-xs font-extrabold text-brand-dark">{{ $i + 1 }}</span>
                     <span class="min-w-0 flex-1"><b class="block truncate text-[13px] text-ink">{{ t($car->brand) }} {{ $car->model }} {{ $car->year }}</b><span class="num text-[11px] text-slate-500">{{ egp($car->price) }}</span></span>
                     <span class="num inline-flex items-center gap-1 text-[11px] font-bold text-slate-500"><x-icon name="eye" class="h-3.5 w-3.5" /> {{ number_format($car->views) }}</span></a></li>
@@ -148,7 +148,7 @@
         <div class="mb-4 flex items-center justify-between"><h2 class="flex items-center gap-2 text-[15px] font-extrabold text-ink"><x-icon name="inbox" class="h-5 w-5 text-brand-dark" /> {{ __('Latest messages') }}</h2><a href="{{ route('admin.inquiries.index') }}" class="inline-flex items-center gap-1 text-xs font-bold text-brand-dark">{{ __('All') }} <x-icon name="arrow-right" class="h-3.5 w-3.5 flip-rtl" /></a></div>
         <ul class="space-y-1">
             @forelse($a['recent_inquiries'] as $inq)
-                <li><a href="{{ route('admin.inquiries.show', $inq) }}" class="flex items-start gap-3 rounded-xl p-2.5 transition hover:bg-slate-50">
+                <li><a href="{{ route('admin.inquiries.show', $inq) }}" class="flex items-start gap-3 rounded-xl p-2.5 hover:bg-slate-50">
                     <span class="grid h-9 w-9 shrink-0 place-items-center rounded-full bg-brand-50 text-xs font-extrabold text-brand-dark">{{ mb_strtoupper(mb_substr($inq->name, 0, 1)) }}</span>
                     <span class="min-w-0 flex-1"><b class="flex items-center gap-2 truncate text-[13px] text-ink">{{ $inq->subject }} @if(is_null($inq->read_at))<span class="h-2 w-2 shrink-0 rounded-full bg-rose-500"></span>@endif</b>
                         <span class="block truncate text-[11px] text-slate-500">{{ $inq->name }} &middot; {{ $inq->created_at->diffForHumans() }}</span></span></a></li>

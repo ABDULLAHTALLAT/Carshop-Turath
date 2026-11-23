@@ -36,18 +36,18 @@
             <nav class="hidden items-center gap-1 lg:flex" aria-label="{{ __('Main') }}">
                 @foreach($links as [$route, $label, $icon, $active])
                     <a href="{{ route($route) }}" @if($active) aria-current="page" @endif
-                       class="group relative inline-flex items-center gap-2 rounded-xl px-4 py-2 text-sm font-semibold transition {{ $active ? 'text-ink bg-brand-50' : 'text-slate-600 hover:text-ink hover:bg-slate-50' }}">
+                       class="group relative inline-flex items-center gap-2 rounded-xl px-4 py-2 text-sm font-semibold {{ $active ? 'text-ink bg-brand-50' : 'text-slate-600 hover:text-ink hover:bg-slate-50' }}">
                         <x-icon :name="$icon" class="h-4 w-4 {{ $active ? 'text-brand-dark' : 'text-slate-400 group-hover:text-brand-dark' }}" /> {{ __($label) }}
                     </a>
                 @endforeach
             </nav>
 
             <div class="flex items-center gap-2">
-                <a href="{{ route('shop') }}" class="grid h-10 w-10 place-items-center rounded-full border border-slate-200 text-slate-600 transition hover:border-brand hover:text-brand-dark" aria-label="{{ __('Search cars') }}"><x-icon name="search" class="h-5 w-5" /></a>
+                <a href="{{ route('shop') }}" class="grid h-10 w-10 place-items-center rounded-full border border-slate-200 text-slate-600 hover:border-brand hover:text-brand-dark" aria-label="{{ __('Search cars') }}"><x-icon name="search" class="h-5 w-5" /></a>
                 @auth
                     <a href="{{ route(auth()->user()->homeRoute()) }}" class="btn btn-primary btn-sm hidden sm:inline-flex"><x-icon name="dashboard" class="h-4 w-4" /> {{ __('Dashboard') }}</a>
                 @else
-                    <a href="{{ route('login') }}" class="grid h-10 w-10 place-items-center rounded-full border border-slate-200 text-slate-600 transition hover:border-brand hover:text-brand-dark" aria-label="{{ __('Admin login') }}"><x-icon name="lock" class="h-5 w-5" /></a>
+                    <a href="{{ route('login') }}" class="grid h-10 w-10 place-items-center rounded-full border border-slate-200 text-slate-600 hover:border-brand hover:text-brand-dark" aria-label="{{ __('Admin login') }}"><x-icon name="lock" class="h-5 w-5" /></a>
                 @endauth
                 <a href="{{ auth()->check() && ! auth()->user()->is_admin ? route('owner.cars.create') : route('register') }}" class="btn btn-brand btn-sm hidden md:inline-flex"><x-icon name="plus" class="h-4 w-4" :stroke="2.4" /> {{ __('Sell your car') }}</a>
                 <button type="button" data-menu-toggle class="grid h-10 w-10 place-items-center rounded-full border border-slate-200 text-slate-700 lg:hidden" aria-label="{{ __('Open menu') }}"><x-icon name="menu" class="h-5 w-5" /></button>
@@ -57,8 +57,8 @@
 </header>
 
 {{-- Mobile drawer --}}
-<div data-drawer-overlay class="pointer-events-none fixed inset-0 z-50 bg-navy/60 opacity-0 backdrop-blur-sm transition-opacity lg:hidden"></div>
-<aside data-drawer aria-hidden="true" class="invisible fixed inset-y-0 end-0 z-50 w-[84%] max-w-sm translate-x-full bg-white p-5 shadow-2xl transition-transform duration-300 rtl:-translate-x-full lg:hidden">
+<div data-drawer-overlay class="pointer-events-none fixed inset-0 z-50 bg-navy/60 opacity-0 backdrop-blur-sm lg:hidden"></div>
+<aside data-drawer aria-hidden="true" class="invisible fixed inset-y-0 end-0 z-50 w-[84%] max-w-sm translate-x-full bg-white p-5 shadow-2xl rtl:-translate-x-full lg:hidden">
     <div class="mb-6 flex items-center justify-between"><x-logo />
         <button type="button" data-drawer-close class="grid h-10 w-10 place-items-center rounded-full border border-slate-200" aria-label="{{ __('Close menu') }}"><x-icon name="x" class="h-5 w-5" /></button>
     </div>

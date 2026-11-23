@@ -16,13 +16,13 @@
 
 @section('content')
 <section class="hero-bg relative overflow-hidden pb-20 pt-12 text-white">
-    <div class="pointer-events-none absolute -top-16 end-10 h-52 w-52 rounded-full bg-brand/20 blur-3xl float-slow" aria-hidden="true"></div>
+    <div class="pointer-events-none absolute -top-16 end-10 h-52 w-52 rounded-full bg-brand/20 blur-3xl" aria-hidden="true"></div>
     <div class="relative mx-auto max-w-7xl px-4">
-        <nav class="hero-rise flex items-center gap-2 text-xs text-white/60" aria-label="{{ __('Breadcrumb') }}">
+        <nav class="flex items-center gap-2 text-xs text-white/60" aria-label="{{ __('Breadcrumb') }}">
             <a href="{{ route('home') }}" class="hover:text-brand">{{ __('Home') }}</a><x-icon name="chevron-right" class="h-3 w-3 flip-rtl" /><span class="text-white">{{ __('Shop') }}</span>
         </nav>
-        <h1 class="hero-rise d-2 mt-3 text-3xl font-extrabold sm:text-4xl">{{ __('Cars for sale') }}</h1>
-        <p class="hero-rise d-3 mt-2 text-sm text-white/70"><span class="num font-bold text-brand-light">{{ number_format($cars->total()) }}</span> {{ __('cars match your search') }}</p>
+        <h1 class="mt-3 text-3xl font-extrabold sm:text-4xl">{{ __('Cars for sale') }}</h1>
+        <p class="mt-2 text-sm text-white/70"><span class="num font-bold text-brand-light">{{ number_format($cars->total()) }}</span> {{ __('cars match your search') }}</p>
     </div>
     <svg class="absolute inset-x-0 bottom-0 h-10 w-full text-white" viewBox="0 0 1200 40" preserveAspectRatio="none" aria-hidden="true"><path fill="currentColor" d="M0 40V18c240 20 520 22 760 8S1100 4 1200 14v26Z"/></svg>
 </section>

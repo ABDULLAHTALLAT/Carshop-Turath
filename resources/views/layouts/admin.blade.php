@@ -23,9 +23,9 @@
 <body class="bg-slate-50 text-slate-800 antialiased">
 <a href="#main" class="skip-link">{{ __('Skip to content') }}</a>
 
-<div data-drawer-overlay class="pointer-events-none fixed inset-0 z-40 bg-navy/60 opacity-0 backdrop-blur-sm transition-opacity lg:hidden"></div>
+<div data-drawer-overlay class="pointer-events-none fixed inset-0 z-40 bg-navy/60 opacity-0 backdrop-blur-sm lg:hidden"></div>
 
-<aside data-drawer data-from-start aria-label="{{ __('Admin') }}" class="invisible fixed inset-y-0 start-0 z-50 flex w-72 -translate-x-full flex-col bg-navy p-5 text-white transition-transform duration-300 rtl:translate-x-full lg:!visible lg:!translate-x-0">
+<aside data-drawer data-from-start aria-label="{{ __('Admin') }}" class="invisible fixed inset-y-0 start-0 z-50 flex w-72 -translate-x-full flex-col bg-navy p-5 text-white rtl:translate-x-full lg:!visible lg:!translate-x-0">
     <div class="flex items-center justify-between">
         <a href="{{ route('admin.dashboard') }}"><x-logo :dark="true" /></a>
         <button type="button" data-drawer-close class="grid h-9 w-9 place-items-center rounded-full border border-white/20 lg:hidden" aria-label="{{ __('Close menu') }}"><x-icon name="x" class="h-4 w-4" /></button>

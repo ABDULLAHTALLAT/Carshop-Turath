@@ -9,12 +9,12 @@
     <link rel="stylesheet" href="{{ asset('css/app.css') }}">
 </head>
 <body class="hero-bg relative grid min-h-screen place-items-center overflow-hidden p-4 text-white">
-<div class="pointer-events-none absolute -top-20 end-10 h-72 w-72 rounded-full bg-brand/25 blur-3xl float-slow" aria-hidden="true"></div>
-<div class="pointer-events-none absolute bottom-0 start-0 h-72 w-72 rounded-full bg-sky-500/10 blur-3xl float" aria-hidden="true"></div>
+<div class="pointer-events-none absolute -top-20 end-10 h-72 w-72 rounded-full bg-brand/25 blur-3xl" aria-hidden="true"></div>
+<div class="pointer-events-none absolute bottom-0 start-0 h-72 w-72 rounded-full bg-sky-500/10 blur-3xl" aria-hidden="true"></div>
 
 <main class="relative w-full max-w-md">
     <a href="{{ route('home') }}" class="mb-6 flex justify-center"><x-logo :dark="true" /></a>
-    <form method="POST" action="{{ route('login.store') }}" class="glass hero-rise rounded-3xl p-7 shadow-2xl">
+    <form method="POST" action="{{ route('login.store') }}" class="glass rounded-3xl p-7 shadow-2xl">
         @csrf
         <h1 class="flex items-center gap-2 text-xl font-extrabold"><x-icon name="lock" class="h-5 w-5 text-brand" /> {{ __('Sign in') }}</h1>
         <p class="mt-1 text-[13px] text-white/65">{{ __('Owners and the broker sign in here.') }}</p>
