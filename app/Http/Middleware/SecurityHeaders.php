@@ -19,6 +19,7 @@ class SecurityHeaders
             "font-src 'self' https://fonts.gstatic.com",
             "img-src 'self' data: blob:",
             "media-src 'self'",
+            "frame-src https://www.openstreetmap.org",
             "connect-src 'self'",
             "object-src 'none'",
             "base-uri 'self'",
