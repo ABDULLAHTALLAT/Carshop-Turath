@@ -25,6 +25,19 @@ class EgyptData
         'Burgundy' => ['#6d1a2b', 'عنابي'],
     ];
 
+    /** Centre of each governorate (its capital city): [latitude, longitude] */
+    public const COORDS = [
+        'Cairo' => [30.0444, 31.2357], 'Giza' => [30.0131, 31.2089], 'Alexandria' => [31.2001, 29.9187],
+        'Qalyubia' => [30.4660, 31.1850], 'Sharqia' => [30.5877, 31.5020], 'Dakahlia' => [31.0409, 31.3785],
+        'Gharbia' => [30.7865, 31.0004], 'Monufia' => [30.5972, 30.9876], 'Beheira' => [31.0341, 30.4682],
+        'Ismailia' => [30.5965, 32.2715], 'Port Said' => [31.2653, 32.3019], 'Suez' => [29.9668, 32.5498],
+        'Damietta' => [31.4165, 31.8133], 'Kafr El Sheikh' => [31.1107, 30.9388], 'Fayoum' => [29.3084, 30.8428],
+        'Beni Suef' => [29.0661, 31.0994], 'Minya' => [28.0871, 30.7618], 'Asyut' => [27.1809, 31.1837],
+        'Sohag' => [26.5591, 31.6948], 'Qena' => [26.1551, 32.7160], 'Luxor' => [25.6872, 32.6396],
+        'Aswan' => [24.0889, 32.8998], 'Red Sea' => [27.2579, 33.8116], 'South Sinai' => [28.2415, 33.6221],
+        'North Sinai' => [31.1316, 33.7984], 'New Valley' => [25.4390, 30.5586], 'Matrouh' => [31.3543, 27.2373],
+    ];
+
     /** Arabic letters used on Egyptian plates */
     public const PLATE_LETTERS = ['أ', 'ب', 'ج', 'د', 'ر', 'س', 'ص', 'ط', 'ع', 'ف', 'ق', 'ك', 'ل', 'م', 'ن', 'هـ', 'و', 'ى'];
 
@@ -97,6 +110,7 @@ class EgyptData
             ['Toyota', 'Hilux', 'Pickup', 2700, 1900, 2012, 'Diesel', 'Imported'],
             ['Toyota', 'Hiace', 'Van', 2700, 2400, 2012, 'Petrol', 'Imported'],
             ['Hyundai', 'Elantra', 'Sedan', 1600, 1300, 2008, 'Petrol', 'Local'],
+            ['Hyundai', 'Sonata', 'Sedan', 2000, 1500, 2011, 'Petrol', 'Local'],
             ['Hyundai', 'Accent RB', 'Sedan', 1600, 900, 2012, 'Petrol', 'Local'],
             ['Hyundai', 'Tucson', 'SUV', 1600, 1900, 2012, 'Petrol', 'Local'],
             ['Hyundai', 'Creta', 'SUV', 1500, 1200, 2017, 'Petrol', 'Local'],
@@ -149,6 +163,7 @@ class EgyptData
             ['BMW', 'X1', 'SUV', 1500, 2500, 2013, 'Petrol', 'Imported'],
             ['BMW', 'X5', 'SUV', 3000, 5500, 2012, 'Petrol', 'Imported'],
             ['Mercedes-Benz', 'C180', 'Sedan', 1600, 2900, 2010, 'Petrol', 'Imported'],
+            ['Mercedes-Benz', 'CLA 200', 'Sedan', 1600, 3300, 2014, 'Petrol', 'Imported'],
             ['Mercedes-Benz', 'E200', 'Sedan', 2000, 3900, 2011, 'Petrol', 'Imported'],
             ['Mercedes-Benz', 'GLC 200', 'SUV', 2000, 4500, 2016, 'Petrol', 'Imported'],
             ['Mercedes-Benz', 'A200', 'Hatchback', 1300, 2400, 2014, 'Petrol', 'Imported'],
