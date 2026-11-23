@@ -70,7 +70,7 @@
                 <div data-gal-track class="gal-track">
                     @if($hasPhotos)
                         @foreach($car->images as $i => $image)
-                            <div class="gal-slide aspect-[16/10]"><img src="{{ $image->url }}" alt="{{ $car->display_title }} - {{ $i + 1 }}" class="h-full w-full object-cover" @if($i > 0) loading="lazy" @endif></div>
+                            <div class="gal-slide car-stage aspect-[16/10]"><img src="{{ $image->url }}" alt="{{ $car->display_title }} - {{ $i + 1 }}" class="h-full w-full object-contain p-6 drop-shadow-2xl" @if($i > 0) loading="lazy" @endif></div>
                         @endforeach
                     @else
                         @foreach($views as $v)
@@ -119,6 +119,20 @@
                     @endforeach
                 </dl>
             </div>
+
+            {{-- ============ Location map (approximate area) ============ --}}
+            @if($car->coordinates)
+                @php [$lat, $lng] = $car->coordinates; $d = 0.22; @endphp
+                <section class="card overflow-hidden" aria-label="{{ __('Location') }}">
+                    <div class="flex flex-wrap items-center justify-between gap-3 p-5">
+                        <h2 class="flex items-center gap-2 text-[15px] font-extrabold text-ink"><x-icon name="map" class="h-5 w-5 text-brand-dark" /> {{ __('Location') }}: {{ t($car->governorate) }}@if($car->city), {{ t($car->city) }}@endif</h2>
+                        <a class="btn btn-ghost btn-sm" href="https://www.google.com/maps/search/?api=1&query={{ $lat }},{{ $lng }}" target="_blank" rel="noopener noreferrer"><x-icon name="external" class="h-4 w-4" /> {{ __('Open in Google Maps') }}</a>
+                    </div>
+                    <iframe class="h-72 w-full border-0" loading="lazy" referrerpolicy="no-referrer" title="{{ __('Location') }}"
+                        src="https://www.openstreetmap.org/export/embed.html?bbox={{ $lng - $d }}%2C{{ $lat - $d / 1.6 }}%2C{{ $lng + $d }}%2C{{ $lat + $d / 1.6 }}&layer=mapnik&marker={{ $lat }}%2C{{ $lng }}"></iframe>
+                    <p class="flex items-center gap-2 px-5 py-3 text-[11px] text-slate-500"><x-icon name="shield-check" class="h-4 w-4 text-emerald-600" /> {{ __('Approximate area. The exact address is shared with serious buyers.') }}</p>
+                </section>
+            @endif
 
             {{-- ============ Egyptian licence ============ --}}
             <div class="card mt-6 p-6">
