@@ -10,6 +10,7 @@
  */
 
 require __DIR__.'/../../app/Support/EgyptData.php';
+require __DIR__.'/../../app/Support/CarPhotos.php';
 require __DIR__.'/../seeders/Support/CarDataGenerator.php';
 
 use Database\Seeders\Support\CarDataGenerator;
@@ -165,7 +166,8 @@ SET FOREIGN_KEY_CHECKS = 1;
 
 SQL;
 
-$rows = (new CarDataGenerator(2026))->generate(240, new DateTimeImmutable('2026-11-21 12:00:00'));
+$generator = new CarDataGenerator(2026);
+$rows = $generator->generate(240, new DateTimeImmutable('2026-11-21 12:00:00'));
 $cols = array_keys($rows[0]);
 
 $out = $schema."\n-- ".count($rows)." demo cars\n";
@@ -173,6 +175,13 @@ foreach (array_chunk($rows, 40) as $chunk) {
     $values = array_map(fn ($r) => '('.implode(', ', array_map($esc, array_values($r))).')', $chunk);
     $out .= 'INSERT INTO `cars` (`'.implode('`, `', $cols).'`) VALUES'."\n".implode(",\n", $values).";\n\n";
 }
+
+// Real photos: car ids are 1..N in insertion order on a fresh database
+$imageRows = [];
+foreach ($generator->photos() as $index => $file) {
+    $imageRows[] = '('.($index + 1).', '.$esc(\App\Support\CarPhotos::path($file)).', 1, NOW(), NOW())';
+}
+$out .= "-- real photos\nINSERT INTO `car_images` (`car_id`, `path`, `position`, `created_at`, `updated_at`) VALUES\n".implode(",\n", $imageRows).";\n";
 
 file_put_contents(__DIR__.'/turath_cars.sql', $out);
 echo 'Wrote '.count($rows)." cars to database/sql/turath_cars.sql\n";
