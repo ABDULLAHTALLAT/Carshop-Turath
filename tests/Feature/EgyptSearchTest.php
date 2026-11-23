@@ -84,4 +84,25 @@ class EgyptSearchTest extends TestCase
     {
         $this->get('/')->assertDontSee('data-theme-toggle', false)->assertDontSee('theme.js');
     }
+
+    public function test_cars_with_real_photos_and_a_location_map(): void
+    {
+        $this->seed(CarSeeder::class);
+
+        $this->assertGreaterThan(30, \App\Models\CarImage::where('path', 'like', 'img/cars/%')->count());
+        foreach (\App\Models\CarImage::pluck('path')->unique() as $path) {
+            $this->assertFileExists(public_path($path));
+        }
+
+        $car = Car::has('images')->first();
+        $this->assertStringContainsString('img/cars/', $car->cover_url);
+        $this->get('/shop/'.$car->slug)->assertOk()->assertSee('openstreetmap.org/export/embed.html', false)->assertSee($car->cover_url, false);
+    }
+
+    public function test_every_governorate_has_map_coordinates(): void
+    {
+        foreach (array_keys(\App\Support\EgyptData::governorates()) as $g) {
+            $this->assertArrayHasKey($g, \App\Support\EgyptData::COORDS);
+        }
+    }
 }
