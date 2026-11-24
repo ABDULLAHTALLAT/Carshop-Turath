@@ -188,9 +188,10 @@
     var hvVideo = $('[data-hv-video]', hv);
     var reduce = window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches;
     var hvPlay = function () { try { var pr = hvVideo.play(); if (pr && pr.catch) pr.catch(function () {}); } catch (e) {} };
-    if (hvVideo && !reduce) hvPlay();
+    var saveData = navigator.connection && navigator.connection.saveData;
+    if (hvVideo && !reduce && !saveData) hvPlay();
     document.addEventListener('visibilitychange', function () {
-      if (!hvVideo || reduce) return;
+      if (!hvVideo || reduce || saveData) return;
       if (document.hidden) hvVideo.pause(); else hvPlay();
     });
   }
