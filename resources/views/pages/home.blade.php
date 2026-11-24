@@ -18,15 +18,12 @@
 
 @section('content')
 {{-- ============================== HERO ============================== --}}
-@php $clips = ['drive-1' => 'Toyota Camry', 'drive-2' => 'BMW X7', 'drive-3' => 'BMW M4']; @endphp
 <section class="hero-bg relative isolate overflow-hidden text-white">
-    {{-- Full-width background clips, played one after another --}}
+    {{-- One full-width background video, looping quietly behind the text --}}
     <div class="hv-bg absolute inset-0 -z-10" data-hv aria-hidden="true">
-        @foreach($clips as $file => $label)
-            <video class="hv-video {{ $loop->first ? 'is-active' : '' }}" muted playsinline preload="{{ $loop->first ? 'auto' : 'metadata' }}" poster="{{ asset('media/'.$file.'.jpg') }}" data-hv-video>
-                <source src="{{ asset('media/'.$file.'.mp4') }}" type="video/mp4">
-            </video>
-        @endforeach
+        <video class="hv-video is-active" muted loop playsinline preload="auto" poster="{{ asset('media/hero.jpg') }}" data-hv-video>
+            <source src="{{ asset('media/hero.mp4') }}" type="video/mp4">
+        </video>
         <div class="absolute inset-0 bg-gradient-to-r from-navy/90 via-navy/60 to-navy/20 rtl:bg-gradient-to-l"></div>
         <div class="absolute inset-x-0 bottom-0 h-40 bg-gradient-to-t from-navy/80 to-transparent"></div>
     </div>
