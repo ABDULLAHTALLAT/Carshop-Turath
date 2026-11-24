@@ -27,24 +27,32 @@
 
 @section('content')
 {{-- ============================== HERO ============================== --}}
-<section class="hero-bg relative overflow-hidden pb-28 pt-16 text-white">
-    <div class="pointer-events-none absolute -top-20 start-1/4 h-72 w-72 rounded-full bg-brand/20 blur-3xl" aria-hidden="true"></div>
-    <div class="relative mx-auto max-w-4xl px-4 text-center">
-        <span class="glass inline-flex items-center gap-2 rounded-full px-4 py-1.5 text-xs font-bold text-brand-light"><x-icon name="users" class="h-4 w-4" /> {{ __('About us') }}</span>
-        <h1 class="hero-title mt-6 text-4xl font-extrabold sm:text-5xl">
-            <span class="ln"><span >{{ __('A simple, honest way') }}</span></span>
-            <span class="ln"><span class="brand-shine">{{ __('to buy and sell cars.') }}</span></span>
-        </h1>
-        <p class="mx-auto mt-5 max-w-2xl text-[15px] leading-8 text-white/75">{{ __('Turath Cars is an independent broker in Egypt. Owners list their cars with every detail, and buyers decide with confidence.') }}</p>
-    </div>
-
-    {{-- Endless road with a transparent car driving across --}}
-    <div class="relative mx-auto mt-14 h-40 max-w-7xl overflow-hidden" aria-hidden="true">
-        <div class="absolute bottom-3 start-0 w-64 sm:w-80" dir="ltr"><x-car-art type="Sedan" color="#6bbce9" /></div>
-        <svg viewBox="0 0 400 22" class="absolute inset-x-0 bottom-0 w-full" preserveAspectRatio="none">
-            <rect y="6" width="400" height="2" fill="#fff" opacity=".18"/>
-            <g ><path class="road-dash" d="M0 14h40v3H0zM80 14h40v3H80zM160 14h40v3h-40zM240 14h40v3h-40zM320 14h40v3h-40zM400 14h40v3h-40zM480 14h40v3h-40z"/></g>
-        </svg>
+<section class="hero-bg relative isolate overflow-hidden pb-24 pt-14 text-white">
+    <img src="{{ asset('media/hero.jpg') }}" alt="" class="absolute inset-0 -z-10 h-full w-full object-cover opacity-25" width="1280" height="720" loading="eager" decoding="async">
+    <div class="absolute inset-0 -z-10 bg-gradient-to-r from-navy/95 via-navy/80 to-navy/40 rtl:bg-gradient-to-l" aria-hidden="true"></div>
+    <div class="relative mx-auto grid max-w-7xl items-center gap-10 px-4 lg:grid-cols-[1.1fr_1fr]">
+        <div>
+            <nav class="flex items-center gap-2 text-xs text-white/60" aria-label="{{ __('Breadcrumb') }}">
+                <a href="{{ route('home') }}" class="hover:text-brand">{{ __('Home') }}</a><x-icon name="chevron-right" class="h-3 w-3 flip-rtl" /><span class="text-white">{{ __('About us') }}</span>
+            </nav>
+            <span class="glass mt-5 inline-flex items-center gap-2 rounded-full px-4 py-1.5 text-xs font-bold text-brand-light"><x-icon name="users" class="h-4 w-4" /> {{ __('About us') }}</span>
+            <h1 class="hero-title mt-5 text-4xl font-extrabold sm:text-5xl">
+                <span class="ln"><span>{{ __('A simple, honest way') }}</span></span>
+                <span class="ln"><span class="brand-shine">{{ __('to buy and sell cars.') }}</span></span>
+            </h1>
+            <p class="mt-5 max-w-xl text-[15px] leading-8 text-white/75">{{ __('Turath Cars is an independent broker in Egypt. Owners list their cars with every detail, and buyers decide with confidence.') }}</p>
+            <ul class="mt-7 flex flex-wrap gap-3 text-[12px] font-semibold">
+                <li class="glass inline-flex items-center gap-2 rounded-full px-3.5 py-2"><x-icon name="shield-check" class="h-4 w-4 text-brand" /> {{ __('Licence checked') }}</li>
+                <li class="glass inline-flex items-center gap-2 rounded-full px-3.5 py-2"><x-icon name="file-text" class="h-4 w-4 text-brand" /> {{ __('Papers shown') }}</li>
+                <li class="glass inline-flex items-center gap-2 rounded-full px-3.5 py-2"><x-icon name="handshake" class="h-4 w-4 text-brand" /> {{ __('Honest broker') }}</li>
+            </ul>
+        </div>
+        {{-- Real car photos, no motion --}}
+        <div class="relative mx-auto hidden h-64 w-full max-w-lg sm:block lg:h-80" aria-hidden="true" dir="ltr">
+            <img src="{{ asset('img/cars/honda-civic-lx.webp') }}" alt="" class="absolute bottom-0 left-0 w-3/5 drop-shadow-2xl" loading="lazy" decoding="async">
+            <img src="{{ asset('img/cars/toyota-camry.webp') }}" alt="" class="absolute bottom-6 right-0 w-3/5 drop-shadow-2xl" loading="lazy" decoding="async">
+            <img src="{{ asset('img/cars/mercedes-cla.webp') }}" alt="" class="absolute left-1/4 top-0 w-1/2 drop-shadow-2xl" loading="lazy" decoding="async">
+        </div>
     </div>
     <svg class="absolute inset-x-0 bottom-0 h-14 w-full text-white" viewBox="0 0 1200 64" preserveAspectRatio="none" aria-hidden="true"><path fill="currentColor" d="M0 64V34c220 26 440 30 660 14S1040 4 1200 26v38Z"/></svg>
 </section>
