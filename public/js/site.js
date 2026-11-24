@@ -170,19 +170,13 @@
   // Hero background: the clips play one after another (loop of all clips)
   var hv = $('[data-hv]');
   if (hv) {
-    var vids = $$('[data-hv-video]', hv), cur = 0;
+    var hvVideo = $('[data-hv-video]', hv);
     var reduce = window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches;
-    var play = function (v) { try { v.currentTime = 0; var pr = v.play(); if (pr && pr.catch) pr.catch(function () {}); } catch (e) {} };
-    var next = function () {
-      var old = vids[cur]; cur = (cur + 1) % vids.length; var nu = vids[cur];
-      play(nu); nu.classList.add('is-active');
-      old.classList.remove('is-active'); try { old.pause(); } catch (e) {}
-    };
-    vids.forEach(function (v) { v.addEventListener('ended', function () { if (vids[cur] === v) next(); }); });
-    if (!reduce) play(vids[0]);
+    var hvPlay = function () { try { var pr = hvVideo.play(); if (pr && pr.catch) pr.catch(function () {}); } catch (e) {} };
+    if (hvVideo && !reduce) hvPlay();
     document.addEventListener('visibilitychange', function () {
-      var v = vids[cur]; if (!v || reduce) return;
-      if (document.hidden) v.pause(); else v.play().catch(function () {});
+      if (!hvVideo || reduce) return;
+      if (document.hidden) hvVideo.pause(); else hvPlay();
     });
   }
 
