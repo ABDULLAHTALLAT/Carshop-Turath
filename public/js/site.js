@@ -49,6 +49,21 @@
   if (overlay) overlay.addEventListener('click', function () { setDrawer(false); });
   document.addEventListener('keydown', function (e) { if (e.key === 'Escape') setDrawer(false); });
 
+  // Shop filter panel: opens from the side, hides again (no animation)
+  var fPanel = $('[data-fdrawer]'), fOverlay = $('[data-fdrawer-overlay]');
+  function setFilters(open) {
+    if (!fPanel) return;
+    fPanel.classList.toggle('hidden', !open);
+    if (fOverlay) fOverlay.classList.toggle('hidden', !open);
+    fPanel.setAttribute('aria-hidden', open ? 'false' : 'true');
+    document.body.classList.toggle('overflow-hidden', open);
+    if (open) { var first = $('input, select', fPanel); if (first) first.focus(); }
+  }
+  $$('[data-fdrawer-open]').forEach(function (b) { b.addEventListener('click', function () { setFilters(true); }); });
+  $$('[data-fdrawer-close]').forEach(function (b) { b.addEventListener('click', function () { setFilters(false); }); });
+  if (fOverlay) fOverlay.addEventListener('click', function () { setFilters(false); });
+  document.addEventListener('keydown', function (e) { if (e.key === 'Escape') setFilters(false); });
+
   // Numbers are shown as they are (no counting animation)
   $$('[data-count]').forEach(function (el) { el.textContent = (parseInt(el.getAttribute('data-count'), 10) || 0).toLocaleString('en-US'); });
 
