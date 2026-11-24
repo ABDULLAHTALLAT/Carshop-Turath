@@ -27,23 +27,25 @@
     <svg class="absolute inset-x-0 bottom-0 h-10 w-full text-white" viewBox="0 0 1200 40" preserveAspectRatio="none" aria-hidden="true"><path fill="currentColor" d="M0 40V18c240 20 520 22 760 8S1100 4 1200 14v26Z"/></svg>
 </section>
 
-<section class="mx-auto grid max-w-7xl gap-8 px-4 py-10 lg:grid-cols-[300px_1fr]">
-    {{-- ============ Filters ============ --}}
-    <aside>
-        <details class="card lg:hidden" @if($active->isNotEmpty()) open @endif>
-            <summary class="flex items-center justify-between p-4 font-bold text-ink"><span class="flex items-center gap-2"><x-icon name="sliders" class="h-5 w-5 text-brand-dark" /> {{ __('Filters') }}</span><x-icon name="chevron-down" class="h-4 w-4" /></summary>
-            <div class="border-t border-slate-100 p-4">@include('shop._filters')</div>
-        </details>
-        <div class="card sticky top-24 hidden p-5 lg:block">
-            <h2 class="mb-4 flex items-center gap-2 text-sm font-extrabold text-ink"><x-icon name="sliders" class="h-5 w-5 text-brand-dark" /> {{ __('Filters') }}</h2>
-            @include('shop._filters')
+<section class="mx-auto max-w-7xl px-4 py-10">
+    {{-- ============ Filters: a side panel that opens on demand ============ --}}
+    <div class="hidden fixed inset-0 z-[60] bg-navy/60" data-fdrawer-overlay aria-hidden="true"></div>
+    <aside class="hidden fixed inset-y-0 start-0 z-[70] flex w-[88vw] max-w-sm flex-col bg-white shadow-2xl" data-fdrawer role="dialog" aria-modal="true" aria-label="{{ __('Filters') }}" aria-hidden="true">
+        <div class="flex items-center justify-between border-b border-slate-100 px-5 py-4">
+            <h2 class="flex items-center gap-2 text-sm font-extrabold text-ink"><x-icon name="sliders" class="h-5 w-5 text-brand-dark" /> {{ __('Filters') }}</h2>
+            <button type="button" class="grid h-9 w-9 place-items-center rounded-lg text-slate-500 hover:bg-slate-100" data-fdrawer-close aria-label="{{ __('Close') }}"><x-icon name="x" class="h-5 w-5" /></button>
         </div>
+        <div class="flex-1 overflow-y-auto px-5 py-5">@include('shop._filters')</div>
     </aside>
 
     {{-- ============ Results ============ --}}
     <div>
         <div class="mb-6 flex flex-wrap items-center justify-between gap-3">
-            <div class="flex flex-wrap gap-2">
+            <div class="flex flex-wrap items-center gap-2">
+                <button type="button" class="btn btn-brand !min-h-[40px] !px-4 text-xs" data-fdrawer-open aria-haspopup="dialog">
+                    <x-icon name="sliders" class="h-4 w-4" /> {{ __('Filters') }}
+                    @if($active->isNotEmpty())<b class="num grid h-5 min-w-5 place-items-center rounded-full bg-white px-1 text-[11px] text-brand-dark">{{ $active->count() }}</b>@endif
+                </button>
                 @foreach($active as $key => $value)
                     <a href="{{ route('shop', collect(request()->query())->except([$key, 'page'])->all()) }}" class="chip">
                         {{ in_array($key, ['governorate', 'traffic_unit', 'color', 'brand', 'body_type', 'transmission', 'fuel', 'license_type', 'origin'], true) ? t($value) : $value }}
@@ -68,7 +70,7 @@
                 <a href="{{ route('shop') }}" class="btn btn-brand mt-6"><x-icon name="repeat" class="h-4 w-4" /> {{ __('Reset filters') }}</a>
             </div>
         @else
-            <div class="grid gap-6 sm:grid-cols-2 xl:grid-cols-3">
+            <div class="grid gap-6 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4">
                 @foreach($cars as $car)@include('partials.car-card', ['car' => $car])@endforeach
             </div>
             @include('partials.pagination', ['paginator' => $cars])
