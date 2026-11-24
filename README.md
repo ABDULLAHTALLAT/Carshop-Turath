@@ -33,6 +33,12 @@ mysql -u root -p < database/sql/turath_cars.sql
 
 `public/css/app.css` is pre-built. To change styles: `npm install && npm run build`.
 
+## Media
+
+- Hero video: `public/media/hero.mp4` (poster `hero.jpg`). Replace both to change it.
+- Car photos: transparent WebP files in `public/img/cars`. Listings without their own photo reuse these (see `App\Support\CarPhotos::REUSE`).
+- Your own photos: `php artisan cars:import-photos {folder}` attaches files named `brand-model.jpg`.
+
 ## Security
 
 CSRF on every form, strict Content-Security-Policy (no inline scripts or styles), throttled login and contact form, honeypot, admin-only access, validated whitelists for every filter, validated and randomly renamed uploads, encrypted HttpOnly SameSite sessions.
