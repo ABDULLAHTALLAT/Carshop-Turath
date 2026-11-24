@@ -52,7 +52,6 @@ textarea.field { min-height: 120px; resize: vertical; }
 .hero-title .ln { display: block; overflow: hidden; padding: .12em 0 .18em; }
 .hero-title .ln > span { display: inline-block; }
 .brand-shine { background-image: linear-gradient(100deg, #a8d9f3 0%, #6bbce9 35%, #fff 50%, #6bbce9 65%, #a8d9f3 100%); background-size: 220% 100%; -webkit-background-clip: text; background-clip: text; color: transparent; }
-.road-dash { fill: rgba(255,255,255,.35); }
 /* Animation delay helpers (no inline style allowed) */
 .d-1{--d:.1s}.d-2{--d:.2s}.d-3{--d:.3s}.d-4{--d:.4s}.d-5{--d:.5s}.d-6{--d:.6s}.d-7{--d:.7s}.d-8{--d:.8s}.d-9{--d:.9s}.d-10{--d:1s}.d-12{--d:1.2s}.d-15{--d:1.5s}
 /* ---------- Header buttons, dock ---------- */
