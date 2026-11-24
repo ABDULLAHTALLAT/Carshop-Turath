@@ -79,7 +79,7 @@ textarea.field { min-height: 120px; resize: vertical; }
 /* ---------- Chips / swatches ---------- */
 .chip { display: inline-flex; align-items: center; gap: .4rem; padding: .35rem .8rem; border-radius: 9999px; font-size: .78rem; font-weight: 600; border: 1px solid #dbe3ec; color: #334155; }
 .chip:hover { border-color: #6bbce9; color: #1f7fb8; }
-.swatch { width: 26px; height: 26px; border-radius: 9999px; border: 2px solid rgba(15,23,42,.12); display: inline-block; cursor: pointer; position: relative; }
+.swatch { width: 32px; height: 32px; border-radius: 9999px; border: 2px solid #fff; box-shadow: 0 0 0 1px rgba(15,23,42,.18), inset 0 -6px 10px rgba(0,0,0,.14), inset 0 4px 6px rgba(255,255,255,.28); display: inline-block; cursor: pointer; position: relative; }
 .swatch-input:checked + .swatch { outline: 3px solid #6bbce9; outline-offset: 2px; }
 .swatch-input:focus-visible + .swatch { outline: 3px solid #0b2447; outline-offset: 2px; }
 .sr-only-input { position: absolute; opacity: 0; width: 1px; height: 1px; }
