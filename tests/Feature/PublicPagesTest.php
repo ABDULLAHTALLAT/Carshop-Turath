@@ -16,6 +16,25 @@ class PublicPagesTest extends TestCase
         }
     }
 
+    public function test_home_uses_the_single_hero_video(): void
+    {
+        $this->get('/')
+            ->assertSee('media/hero.mp4', false)
+            ->assertDontSee('media/drive-1.mp4', false);
+    }
+
+    public function test_shop_filters_open_in_a_side_panel(): void
+    {
+        $this->get('/shop')
+            ->assertSee('data-fdrawer', false)
+            ->assertSee('data-fdrawer-open', false);
+    }
+
+    public function test_colour_swatches_carry_their_real_colour(): void
+    {
+        $this->get('/shop')->assertSee('data-bg="#c0262d"', false);
+    }
+
     public function test_security_headers_are_sent(): void
     {
         $this->get('/')
