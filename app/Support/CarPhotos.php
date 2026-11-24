@@ -24,6 +24,23 @@ class CarPhotos
         'Mercedes-Benz|CLA 200' => [['mercedes-cla', 'White', 'Sedan', 2016, 2019]],
     ];
 
+    /**
+     * Photos that are reused for listings of models we have no photo of.
+     * body type => [file, colour] (SUVs, vans and the rest reuse the sedan shots).
+     */
+    public const REUSE = [
+        'Sedan' => [['toyota-camry', 'White'], ['honda-civic-2009', 'Grey'], ['honda-civic-lx', 'Black'], ['honda-civic-si', 'White'], ['hyundai-elantra', 'Silver'], ['hyundai-sonata', 'Silver'], ['mercedes-cla', 'White']],
+        'Hatchback' => [['toyota-corolla', 'White'], ['kia-rio', 'White']],
+    ];
+
+    /** @return array{0:string,1:string} [file, colour] for a body type, picked by an index */
+    public static function reuse(string $body, int $index): array
+    {
+        $pool = self::REUSE[$body] ?? self::REUSE['Sedan'];
+
+        return $pool[$index % count($pool)];
+    }
+
     public static function modelKeys(): array
     {
         return array_keys(self::MAP);
