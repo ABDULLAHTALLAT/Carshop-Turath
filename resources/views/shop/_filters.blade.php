@@ -27,7 +27,7 @@
         <div class="flex flex-wrap gap-2" data-swatches>
             <label class="cursor-pointer"><input type="radio" class="swatch-input sr-only-input" name="color" value="" @checked(empty($filters['color'])) data-name="{{ __('Any colour') }}"><span class="swatch grid place-items-center bg-white text-slate-400" title="{{ __('Any colour') }}"><x-icon name="x" class="h-3 w-3" /></span></label>
             @foreach(\App\Support\EgyptData::COLORS as $name => [$hex, $ar])
-                <label class="cursor-pointer"><input type="radio" class="swatch-input sr-only-input" name="color" value="{{ $name }}" @checked(($filters['color'] ?? '') === $name) data-name="{{ t($name) }}"><span class="swatch {{ 'bg-['.$hex.']' }}" title="{{ t($name) }}"></span></label>
+                <label class="cursor-pointer"><input type="radio" class="swatch-input sr-only-input" name="color" value="{{ $name }}" @checked(($filters['color'] ?? '') === $name) data-name="{{ t($name) }}"><span class="swatch" data-bg="{{ $hex }}" title="{{ t($name) }}"></span></label>
             @endforeach
         </div>
         <p class="mt-2 text-[11px] text-slate-500" data-swatch-label>{{ ! empty($filters['color']) ? t($filters['color']) : __('Any colour') }}</p></div>
