@@ -58,6 +58,7 @@
     fPanel.setAttribute('aria-hidden', open ? 'false' : 'true');
     document.body.classList.toggle('overflow-hidden', open);
     if (open) { var first = $('input, select', fPanel); if (first) first.focus(); }
+    else { var opener = $('[data-fdrawer-open]'); if (opener) opener.focus(); }
   }
   $$('[data-fdrawer-open]').forEach(function (b) { b.addEventListener('click', function () { setFilters(true); }); });
   $$('[data-fdrawer-close]').forEach(function (b) { b.addEventListener('click', function () { setFilters(false); }); });
