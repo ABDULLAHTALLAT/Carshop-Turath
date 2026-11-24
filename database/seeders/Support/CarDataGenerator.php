@@ -93,6 +93,13 @@ class CarDataGenerator
 
             $color = $photoColor ?? $this->colorFor($colors, $brand);
 
+            // Every other listing reuses one of the real photos so no card is left empty
+            if (! $usePhoto) {
+                [$reuseFile, $reuseColor] = CarPhotos::reuse($body, $i + mt_rand(0, 6));
+                $this->photos[$i] = $reuseFile;
+                $color = $reuseColor;
+            }
+
             // Price: depreciation by age, adjusted by mileage and condition
             $price = $newK * 1000 * (0.9 ** $age);
             $price *= match ($condition) {
